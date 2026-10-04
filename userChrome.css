@@ -209,7 +209,8 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    inside the browser window, so backdrop-filter can blur the page behind
    them. :not(#__a) outweighs Zen's `#zen-toast-container .zen-toast`. */
 #zen-toast-container:not(#__a) .zen-toast {
-  background: rgba(255, 255, 255, 0.08) !important;
+  /* dark tint: a light one vanishes on white pages */
+  background: rgba(20, 20, 20, 0.55) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
   box-shadow:
@@ -219,4 +220,37 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   color: #ffffff !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 13px !important;
+}
+
+/* Swipe back/forward indicator as a glass half-pill. The icon is a 25x49
+   SVG half-circle with its flat side on the screen edge (Next is the same
+   one mirrored with scaleX(-1), so one radius fits both). Its own fills go
+   transparent and the <svg> box itself becomes the glass: translucent,
+   blurring the page behind it, with a light rim and top highlight.
+   .will-navigate is set once the swipe is far enough to trigger. */
+#historySwipeAnimationPreviousArrow > svg,
+#historySwipeAnimationNextArrow > svg {
+  border-radius: 0 25px 25px 0 !important;
+  /* dark tint: a light one vanishes on white pages */
+  background: rgba(20, 20, 20, 0.5) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.2),
+    0 6px 18px rgba(0, 0, 0, 0.35) !important;
+  transition: background 0.2s ease !important;
+}
+#historySwipeAnimationPreviousArrow > svg.will-navigate,
+#historySwipeAnimationNextArrow > svg.will-navigate {
+  background: rgba(20, 20, 20, 0.75) !important;
+}
+.swipe-nav-icon-circle,
+.swipe-nav-icon-circle-outline {
+  fill: transparent !important;
+  stroke: none !important;
+}
+.swipe-nav-icon-arrow,
+.will-navigate > .swipe-nav-icon-arrow {
+  fill: #ffffff !important;
+  stroke: none !important;
 }
