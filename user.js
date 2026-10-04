@@ -1,0 +1,10 @@
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("devtools.chrome.enabled", true);
+user_pref("devtools.debugger.remote-enabled", true);
+user_pref("browser.tabs.closeTabByDblclick", true);
+user_pref("browser.urlbar.trimURLs", true);
+user_pref("layout.css.backdrop-filter.enabled", true);
+user_pref("gfx.webrender.all", true);
+user_pref("ui.tooltipDelay", 0);
+user_pref("widget.macos.native-popovers", false);
+user_pref("widget.macos.native-context-menus", true);
