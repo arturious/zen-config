@@ -1,0 +1,51 @@
+.r-adyw6z {
+  font-size: 16px !important;
+}
+
+.r-th6na {
+  border-left-width: 0 !important;
+}
+.r-1ua6aaf {
+  border-right-width: 0 !important;
+}
+.r-qklmqi {
+  border-bottom-width: 0 !important;
+}
+
+/* левая колонка: не растягивается, меню прижато влево */
+header[role="banner"] {
+  flex-grow: 0 !important;
+  align-items: flex-start !important;
+}
+
+/* main забирает всё свободное место */
+main[role="main"] {
+  flex-grow: 1 !important;
+  align-items: stretch !important;
+}
+main[role="main"] > div,
+main[role="main"] > div > div,
+main[role="main"] > div > div > div {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* лента тянется на всю доступную ширину */
+[data-testid="primaryColumn"] {
+  flex-grow: 1 !important;
+  flex-shrink: 1 !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* внутренний контейнер постов (был max-width: 600px) */
+[data-testid="primaryColumn"] .r-1ye8kvj {
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* правая панель: скрыта, но место под неё остаётся пустым */
+[data-testid="sidebarColumn"] {
+  visibility: hidden !important;
+}
