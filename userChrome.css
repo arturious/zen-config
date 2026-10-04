@@ -25,7 +25,7 @@ tooltip {
   &[open] #identity-icon-box::after {
     content: "New Tab" !important;
     filter: opacity(0.5) !important;
-    padding-left: 6px !important;
+    padding-left: var(--zen-urlbar-gap, 12px) !important;
   }
 }
 
@@ -77,9 +77,32 @@ tooltip {
    spans the full bar width and centers relative to the whole bar, not just
    the space left over after the icon. Scoped to the floating urlbar only —
    applying this globally broke the icon position in the normal toolbar. */
+/* Cmd+L / Cmd+T floating bar: one gap (--zen-urlbar-gap) between every
+   piece - left edge -> icon -> "New Tab" word (Cmd+T) -> text -> right edge.
+   The icon box stays in the normal flow, so the text always starts after the
+   icon and, on a new tab, after the "New Tab" word too (it's drawn inside
+   that box) instead of running under them. Zen's own paddings are zeroed so
+   the gaps come from this one number. Text is 14px here. */
+#urlbar[open][zen-floating-urlbar="true"] {
+  --zen-urlbar-gap: 12px;
+}
+#urlbar[open][zen-floating-urlbar="true"] .urlbar-input-container {
+  padding-inline: var(--zen-urlbar-gap) !important;
+}
 #urlbar[open][zen-floating-urlbar="true"] #identity-box {
-  position: absolute !important;
-  left: 8px !important;
+  position: static !important;
+  margin: 0 var(--zen-urlbar-gap) 0 0 !important;
+  padding: 0 !important;
+}
+#urlbar[open][zen-floating-urlbar="true"] #identity-icon-box {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+#urlbar[open][zen-floating-urlbar="true"]:not(#__a) #urlbar-input {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
 }
 
 #urlbar-zoom-button {
