@@ -330,3 +330,10 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   width: 6px !important;
   background: transparent !important;
 }
+
+/* Unloaded tabs (Auto Tab Discard, low-memory unloading, not yet restored
+   after startup): Firefox marks them [pending] - dim their title and icon so
+   it's clear they'll reload when clicked. */
+.tabbrowser-tab:is([pending], [discarded]):not([selected]) :is(.tab-label, .tab-icon-image) {
+  opacity: 0.45 !important;
+}
