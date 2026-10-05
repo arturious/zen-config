@@ -53,8 +53,9 @@ tooltip {
   transition: var(--zen-animation-smoothness) !important;
 }
 
+/* No pointer-events: none here - Zen closes the floating search when the
+   page is clicked, and blocking clicks on it made closing take two clicks. */
 #browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels {
-  pointer-events: none;
   scale: 1.1 !important;
   filter: blur(10px) brightness(70%) !important;
 }
@@ -336,4 +337,63 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    it's clear they'll reload when clicked. */
 .tabbrowser-tab:is([pending], [discarded]):not([selected]) :is(.tab-label, .tab-icon-image) {
   opacity: 0.45 !important;
+}
+
+/* Top toolbar ("Multiple toolbars" layout): the address bar is only as wide
+   as the URL it shows and sits in the middle of the toolbar. The input sizes
+   to its text with field-sizing (Gecko 152+), everything around it shrinks
+   to fit. Zen gives #urlbar-container inline-size containment (for its
+   @container query), which stops a box from sizing to its content - so it's
+   turned off here. Taken out of flex flow and centered on the whole top
+   strip (#zen-appcontent-navbar-container: window buttons + #nav-bar + the
+   "..." menu), not on #nav-bar, which starts after the window buttons and
+   would put it off-center. Scoped to the resting bar: the open one is Zen's
+   floating popover and keeps its own size. */
+:root:not([zen-single-toolbar="true"]) #zen-appcontent-navbar-container {
+  position: relative !important;
+}
+:root:not([zen-single-toolbar="true"]) #urlbar-container {
+  container-type: normal !important;
+  position: absolute !important;
+  /* Centered with auto margins, not left: 50% + translate: Firefox checks
+     whether a click that closes a panel hit the panel's anchor using the
+     untransformed position, so with translate a second click on the site
+     data button inside the bar didn't count as "on the anchor" and Zen
+     reopened the panel instead of closing it. */
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin-inline: auto !important;
+  flex: none !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: 50% !important;
+  /* Firefox gives it min-height: 50px, taller than Zen's 42px strip - that
+     overrode top/bottom: 0 and put the bar 4px below the buttons. */
+  min-height: 0 !important;
+  height: auto !important;
+}
+/* With the bar out of flow nothing fills the middle any more, so the items
+   that came after it (pinned extensions etc.) would slide left next to the
+   back/forward buttons - push them back to the right edge. */
+:root:not([zen-single-toolbar="true"]) #urlbar-container ~ :not([hidden]) {
+  margin-inline-start: auto !important;
+}
+:root:not([zen-single-toolbar="true"]) #urlbar-container ~ :not([hidden]) ~ * {
+  margin-inline-start: 0 !important;
+}
+:root:not([zen-single-toolbar="true"]) #urlbar:not([breakout-extend]):not([open]) {
+  flex: none !important;
+  max-width: 100% !important;
+
+  & .urlbar-input-box {
+    flex-grow: 0 !important;
+    min-width: 0 !important;
+  }
+  & #urlbar-input {
+    field-sizing: content !important;
+    min-width: 4ch !important;
+    max-width: 100% !important;
+  }
 }

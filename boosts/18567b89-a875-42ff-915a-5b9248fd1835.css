@@ -1,0 +1,21 @@
+.tw-root--theme-dark body {
+  background-color: #000 !important;
+}
+
+.simplebar-content {
+  background-color: #000 !important;
+  border-right: var(--border-width-default) solid var(--color-border-base) !important;
+}
+
+.tw-root--theme-dark,
+:root {
+  --color-background-body: #000 !important;
+  --color-background-base: #000 !important;
+  --color-background-alt: #000 !important;
+  --color-background-alt-2: #000 !important;
+  --color-background-float: #000 !important;
+}
+
+.tw-root--theme-dark .chat-room {
+  background: #000 !important;
+}
