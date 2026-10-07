@@ -153,6 +153,15 @@ panelmultiview,
    keep them solid black. */
 menupopup {
   background-color: #000000 !important;
+  /* Inset rather than a real border: the clip-path rounds the box at
+     its edge, and a border-box border would be clipped at the corners. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+  /* Tighter corners than the 16px the panels use. */
+  border-radius: 10px !important;
+  clip-path: inset(0 round 10px) !important;
+}
+menupopup::part(content) {
+  border-radius: 10px !important;
 }
 
 .panel-viewstack,
@@ -170,6 +179,13 @@ menuitem[_moz-menuactive="true"] {
   color: #ffffff !important;
 }
 
+/* Highlighted context menu item: concentric with the menu's 10px corners -
+   the item sits ~4px in from the menu edge, so 10 - 4 = 6px. */
+menupopup menu,
+menupopup menuitem {
+  border-radius: 6px !important;
+}
+
 panel toolbarbutton,
 panel label,
 panel description,
@@ -181,15 +197,28 @@ menupopup menuitem {
   font-weight: 400 !important;
 }
 
-/* "site.com is now full screen / Exit Full Screen (esc)" banner */
+/* Context menus 1px larger than panels. */
+menupopup menu,
+menupopup menuitem {
+  font-size: 13px !important;
+}
+
+/* "site.com is now full screen / Exit Full Screen (esc)" banner - same dark
+   glass pill as Zen's toasts ("New background tab opened!", see the toast
+   rule below): tint, rim, top highlight, shadow, and Zen's toast radius. */
 #fullscreen-warning {
-  background-color: #000000 !important;
-  border-radius: 16px !important;
-  border: none !important;
+  background: rgba(20, 20, 20, 0.85) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.35) !important;
+  color: #ffffff !important;
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 13px !important;
-  padding: 10px 16px !important;
+  padding: 8px 8px 8px 14px !important;
 }
 
 /* Downloads / history / other arrow panels. With widget.macos.native-popovers
@@ -389,4 +418,12 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
     min-width: 4ch !important;
     max-width: 100% !important;
   }
+}
+
+/* Tab context menu: Auto Tab Discard's "Discard Tab" first, above "New Tab
+   Below". Extension menu items get ids prefixed with the extension's widget
+   id ({c2c003ee-...} -> _c2c003ee-..._), and the menu lays its items out as
+   a flex column, so order moves it without touching the DOM. */
+#tabContextMenu > menuitem[id^="_c2c003ee-bd69-42a2-b0e9-6f34222cb046_-menuitem-"] {
+  order: -1 !important;
 }
