@@ -332,13 +332,6 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   background: transparent !important;
 }
 
-/* Unloaded tabs (Auto Tab Discard, low-memory unloading, not yet restored
-   after startup): Firefox marks them [pending] - dim their title and icon so
-   it's clear they'll reload when clicked. */
-.tabbrowser-tab:is([pending], [discarded]):not([selected]) :is(.tab-label, .tab-icon-image) {
-  opacity: 0.45 !important;
-}
-
 /* Top toolbar ("Multiple toolbars" layout): the address bar is only as wide
    as the URL it shows and sits in the middle of the toolbar. The input sizes
    to its text with field-sizing (Gecko 152+), everything around it shrinks

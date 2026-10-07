@@ -13,5 +13,5 @@ user_pref("toolkit.zoomManager.zoomValues", "0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65
 user_pref("dom.ipc.processCount", 4);
 user_pref("browser.sessionhistory.max_total_viewers", 0);
 user_pref("browser.cache.memory.capacity", 131072);
-user_pref("browser.tabs.min_inactive_duration_before_unload", 300000);
+user_pref("browser.tabs.unloadOnLowMemory", false);
 user_pref("media.av1.enabled", false);
