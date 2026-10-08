@@ -442,3 +442,9 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
 #urlbar-results {
   max-height: calc(7 * 49px) !important;
 }
+
+/* Hide the macOS window buttons (close / minimize / zoom) - the window is
+   closed with Cmd+Shift+W, minimized with Cmd+M, fullscreen Ctrl+Cmd+F. */
+.titlebar-buttonbox-container {
+  display: none !important;
+}
