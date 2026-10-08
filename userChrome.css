@@ -294,15 +294,20 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   font-size: 13px !important;
 }
 
-/* Swipe back/forward indicator as a glass half-pill. The icon is a 25x49
-   SVG half-circle with its flat side on the screen edge (Next is the same
-   one mirrored with scaleX(-1), so one radius fits both). Its own fills go
-   transparent and the <svg> box itself becomes the glass: translucent,
-   blurring the page behind it, with a light rim and top highlight.
+/* Swipe back/forward indicator as a glass circle (60px) that slides in
+   whole from behind the screen edge. Firefox's icon is a 25x49 SVG
+   half-circle with its flat side on the edge (Next is the same one mirrored
+   with scaleX(-1), so these rules fit both). Its own fills go transparent and
+   the <svg> box itself becomes the glass circle, 6px off the edge. How far
+   it slides comes from browser.swipe.navigation-icon-start/end-position in
+   user.js (-66 = 60 + 6, fully hidden -> 0, fully in view).
    .will-navigate is set once the swipe is far enough to trigger. */
 #historySwipeAnimationPreviousArrow > svg,
 #historySwipeAnimationNextArrow > svg {
-  border-radius: 0 25px 25px 0 !important;
+  width: 60px !important;
+  height: 60px !important;
+  margin: auto 0 auto 6px !important;
+  border-radius: 50% !important;
   /* dark tint: a light one vanishes on white pages */
   /* no backdrop-filter - it dims the whole page (see the toast rule) */
   background: rgba(20, 20, 20, 0.7) !important;
@@ -311,6 +316,15 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.2),
     0 6px 18px rgba(0, 0, 0, 0.35) !important;
   transition: background 0.2s ease !important;
+}
+/* The 25x49 viewBox is scaled to the 60px height and centered, which leaves
+   the arrow (drawn for the half-circle) left of the circle's middle and
+   small: move it to the center and enlarge it. Units are viewBox units. */
+#historySwipeAnimationPreviousArrow .swipe-nav-icon-arrow,
+#historySwipeAnimationNextArrow .swipe-nav-icon-arrow {
+  transform-box: fill-box !important;
+  transform-origin: center !important;
+  transform: translate(4px, 0) scale(1.4) !important;
 }
 #historySwipeAnimationPreviousArrow > svg.will-navigate,
 #historySwipeAnimationNextArrow > svg.will-navigate {
@@ -447,4 +461,14 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    closed with Cmd+Shift+W, minimized with Cmd+M, fullscreen Ctrl+Cmd+F. */
 .titlebar-buttonbox-container {
   display: none !important;
+}
+
+/* No clip mask on the page area (confirmed fix for heat). Zen clips the page to its rounded
+   corners every frame; on pages with constant animation that clipping runs
+   at 60-120 fps and may be what heats the Mac. Corners of the page area
+   may turn square. (From RapidFox's userChrome.css.) */
+.browserContainer,
+.browserStack,
+browser {
+  clip-path: none !important;
 }
