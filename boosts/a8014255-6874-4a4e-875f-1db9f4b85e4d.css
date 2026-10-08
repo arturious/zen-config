@@ -50,9 +50,3 @@ main[role="main"] > div > div > div {
   visibility: hidden !important;
 }
 
-/* шапка ленты: без размытия того, что под ней */
-.r-1e5uvyk {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-

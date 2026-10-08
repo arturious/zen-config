@@ -103,7 +103,15 @@ tooltip {
 #urlbar[open][zen-floating-urlbar="true"]:not(#__a) #urlbar-input {
   margin: 0 !important;
   padding: 0 !important;
+  /* Mirror the icon (16px) + gap on the left, so the centered text sits in
+     the middle of the whole bar, not of the space after the icon. */
+  padding-inline-end: calc(16px + var(--zen-urlbar-gap)) !important;
   font-size: 14px !important;
+}
+/* New tab: the left side also has the "New Tab" word (~56px at 14px) and
+   one more gap, so mirror that too. */
+#urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"]:not(#__a) #urlbar-input {
+  padding-inline-end: calc(16px + 56px + 2 * var(--zen-urlbar-gap)) !important;
 }
 
 #urlbar-zoom-button {
@@ -426,4 +434,11 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    a flex column, so order moves it without touching the DOM. */
 #tabContextMenu > menuitem[id^="_c2c003ee-bd69-42a2-b0e9-6f34222cb046_-menuitem-"] {
   order: -1 !important;
+}
+
+/* URL bar results: Zen caps the list at 244px (5 rows of 49px - the top
+   "Search with..." row + 4 suggestions; the rest scroll, scrollbar hidden).
+   7 rows = the top row + 6 suggestions. */
+#urlbar-results {
+  max-height: calc(7 * 49px) !important;
 }
