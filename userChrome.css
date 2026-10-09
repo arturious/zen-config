@@ -27,6 +27,12 @@ tooltip {
     filter: opacity(0.5) !important;
     padding-left: var(--zen-urlbar-gap, 12px) !important;
   }
+
+  /* Cmd+T from an internal page (Settings, about:) kept that page's label
+     ("Zen") next to the icon, before "New Tab". */
+  #identity-icon-label {
+    display: none !important;
+  }
 }
 
 /* Animation smoothness: Quick Snap */
@@ -74,21 +80,32 @@ tooltip {
   text-align: center !important;
 }
 
-/* Take the left-side identity/lock icon out of flex flow so the text field
-   spans the full bar width and centers relative to the whole bar, not just
-   the space left over after the icon. Scoped to the floating urlbar only —
-   applying this globally broke the icon position in the normal toolbar. */
-/* Cmd+L / Cmd+T floating bar: one gap (--zen-urlbar-gap) between every
-   piece - left edge -> icon -> "New Tab" word (Cmd+T) -> text -> right edge.
-   The icon box stays in the normal flow, so the text always starts after the
-   icon and, on a new tab, after the "New Tab" word too (it's drawn inside
-   that box) instead of running under them. Zen's own paddings are zeroed so
-   the gaps come from this one number. Text is 14px here. */
+/* Cmd+L / Cmd+T floating bar. The text field starts right after the
+   pieces on the left (page icon or magnifier; "New Tab" on Cmd+T; a search
+   engine chip like Google / ChatGPT) and mirrors their width on the right,
+   so the placeholder and text stay centered on the whole bar while a long
+   URL uses all the room after the icons and never runs under them.
+   CSS can't measure those pieces, so their widths are set here: the icon is
+   16px, "New Tab" ~56px at 14px, the chip ~70px (an estimate, see below).
+   If the text ends up off-center in some state, adjust these numbers. */
 #urlbar[open][zen-floating-urlbar="true"] {
   --zen-urlbar-gap: 12px;
+  /* Bar edge -> first icon: same as the results' favicons below it, so the
+     icon sits in their column. Both sides, to keep the text centered. */
+  --zen-urlbar-edge: 22px;
+  --zen-urlbar-icon: 16px;
+  --zen-urlbar-newtab: 0px;
+  --zen-urlbar-chip: 0px;
+}
+#urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"] {
+  --zen-urlbar-newtab: calc(56px + var(--zen-urlbar-gap));
+}
+#urlbar[open][zen-floating-urlbar="true"][searchmode] {
+  --zen-urlbar-chip-width: 70px;   /* estimate of the chip, see below */
+  --zen-urlbar-chip: calc(var(--zen-urlbar-chip-width) + var(--zen-urlbar-gap));
 }
 #urlbar[open][zen-floating-urlbar="true"] .urlbar-input-container {
-  padding-inline: var(--zen-urlbar-gap) !important;
+  padding-inline: var(--zen-urlbar-edge) !important;
 }
 #urlbar[open][zen-floating-urlbar="true"] #identity-box {
   position: static !important;
@@ -100,18 +117,31 @@ tooltip {
   padding: 0 !important;
   font-size: 14px !important;
 }
+/* Search engine chip (Google, ChatGPT...) - Zen draws it as the older
+   #urlbar-search-mode-indicator. Sized to its text; the centering above
+   reserves --zen-urlbar-chip-width for it on the right, an estimate (CSS
+   can't measure the chip), so a much longer or shorter name shifts the
+   centered text by half the difference. Zen's background kept; a dim thin
+   border (inset, no size change) and dimmed system-font text. */
+#urlbar[open][zen-floating-urlbar="true"][searchmode] #urlbar-search-mode-indicator {
+  margin-inline: 0 var(--zen-urlbar-gap) !important;
+}
+#urlbar-search-mode-indicator {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+}
+#urlbar-search-mode-indicator-title {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  white-space: nowrap !important;
+}
 #urlbar[open][zen-floating-urlbar="true"]:not(#__a) #urlbar-input {
   margin: 0 !important;
   padding: 0 !important;
-  /* Mirror the icon (16px) + gap on the left, so the centered text sits in
-     the middle of the whole bar, not of the space after the icon. */
-  padding-inline-end: calc(16px + var(--zen-urlbar-gap)) !important;
+  padding-inline-end: calc(var(--zen-urlbar-icon) + var(--zen-urlbar-gap)
+    + var(--zen-urlbar-newtab) + var(--zen-urlbar-chip)) !important;
   font-size: 14px !important;
-}
-/* New tab: the left side also has the "New Tab" word (~56px at 14px) and
-   one more gap, so mirror that too. */
-#urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"]:not(#__a) #urlbar-input {
-  padding-inline-end: calc(16px + 56px + 2 * var(--zen-urlbar-gap)) !important;
 }
 
 #urlbar-zoom-button {

@@ -14,3 +14,8 @@ user_pref("browser.tabs.unloadOnLowMemory", false);
 user_pref("browser.ml.chat.enabled", false);
 user_pref("browser.swipe.navigation-icon-start-position", -66);
 user_pref("browser.swipe.navigation-icon-end-position", 0);
+// Urlbar: bookmarks/history before search suggestions, and no "Search with…"
+// heuristic row on top - the best bookmark/history match is the first row.
+// hideHeuristic is experimental: check what Enter does with no row selected.
+user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
+user_pref("browser.urlbar.experimental.hideHeuristic", true);
