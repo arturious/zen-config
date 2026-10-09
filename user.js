@@ -19,3 +19,10 @@ user_pref("browser.swipe.navigation-icon-end-position", 0);
 // hideHeuristic is experimental: check what Enter does with no row selected.
 user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 user_pref("browser.urlbar.experimental.hideHeuristic", true);
+// Tab moves between results only, skipping each result's "..." menu button
+// (still clickable; Shift+Delete removes a history result from the keyboard).
+user_pref("browser.urlbar.resultMenu.keyboardAccessible", false);
+// Cmd+T opens with an empty bar: Zen otherwise keeps what you typed (or the
+// result you arrowed to) for 45s after Escape and puts it back on the next
+// Cmd+T. 0 = clear right away.
+user_pref("zen.urlbar.wait-to-clear", 0);

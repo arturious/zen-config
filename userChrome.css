@@ -96,6 +96,12 @@ tooltip {
   --zen-urlbar-icon: 16px;
   --zen-urlbar-newtab: 0px;
   --zen-urlbar-chip: 0px;
+  --zen-urlbar-label: 0px;
+  --zen-urlbar-label-width: 110px;
+}
+/* Same conditions Firefox shows #urlbar-label-box under. */
+#urlbar[open][zen-floating-urlbar="true"]:is([actiontype="switchtab"]:not([action-override]), [actiontype="extension"]) {
+  --zen-urlbar-label: calc(var(--zen-urlbar-label-width) + var(--zen-urlbar-gap));
 }
 #urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"] {
   --zen-urlbar-newtab: calc(56px + var(--zen-urlbar-gap));
@@ -136,11 +142,22 @@ tooltip {
   color: rgba(255, 255, 255, 0.7) !important;
   white-space: nowrap !important;
 }
+/* "Switch to tab:" label (shown while a result with an open tab is
+   selected): fixed width - its text never changes - so the centering above
+   can reserve exactly that much on the right. */
+#urlbar[open][zen-floating-urlbar="true"] #urlbar-label-box {
+  box-sizing: border-box !important;
+  width: var(--zen-urlbar-label-width) !important;
+  min-width: var(--zen-urlbar-label-width) !important;
+  justify-content: center !important;
+  margin-inline: 0 var(--zen-urlbar-gap) !important;
+}
 #urlbar[open][zen-floating-urlbar="true"]:not(#__a) #urlbar-input {
   margin: 0 !important;
   padding: 0 !important;
   padding-inline-end: calc(var(--zen-urlbar-icon) + var(--zen-urlbar-gap)
-    + var(--zen-urlbar-newtab) + var(--zen-urlbar-chip)) !important;
+    + var(--zen-urlbar-newtab) + var(--zen-urlbar-chip)
+    + var(--zen-urlbar-label)) !important;
   font-size: 14px !important;
 }
 
@@ -465,7 +482,13 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
     flex-grow: 0 !important;
     min-width: 0 !important;
   }
+  /* No overflow fade. Firefox turns it on with the textoverflow attribute
+     and clears it on an "underflow" event - which never comes here, since
+     the bar resizes to its text: after Cmd+T -> pick a long result -> Escape
+     the short page URL came back still faded. The bar already sizes to the
+     URL, so the fade only mattered for URLs past the 50% cap above. */
   & #urlbar-input {
+    mask-image: none !important;
     field-sizing: content !important;
     min-width: 4ch !important;
     max-width: 100% !important;
