@@ -35,17 +35,18 @@ tooltip {
   }
 }
 
-/* Animation smoothness: Quick Snap */
+/* Page transitions: Quick Snap, limited to scale and opacity. Keep Zen's
+   own transition variable unchanged for the rest of the interface. */
 :root {
-  --zen-animation-smoothness:
-    all 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3), filter 0.15s ease-in-out,
+  --userchrome-page-transition:
+    scale 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3),
     opacity 0.2s ease-in-out !important;
 }
 
 /* Tab switch animation */
 #tabbrowser-tabpanels
   > hbox:not([zen-split="true"]):not(:has(.zen-glance-background)) {
-  transition: var(--zen-animation-smoothness) !important;
+  transition: var(--userchrome-page-transition) !important;
   scale: 0.9 !important;
   opacity: 0;
 }
@@ -54,25 +55,23 @@ tooltip {
   opacity: 1 !important;
 }
 
-/* URL bar zoom animation */
-#browser:not(:has(.zen-glance-background)) #tabbrowser-tabpanels {
-  transition: var(--zen-animation-smoothness) !important;
-}
-
 /* No pointer-events: none here - Zen closes the floating search when the
    page is clicked, and blocking clicks on it made closing take two clicks. */
 #browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels {
-  scale: 1.1 !important;
-  filter: blur(10px) brightness(70%) !important;
+  scale: 1 !important;
+  filter: brightness(70%) !important;
+}
+
+#urlbar[open][zen-floating-urlbar="true"],
+#urlbar[open][zen-floating-urlbar="true"] .urlbar-background {
+  corner-shape: round !important;
+  border-radius: 16px !important;
 }
 
 #urlbar[open][zen-floating-urlbar="true"] .urlbar-background {
-  background-color: color-mix(
-    in srgb,
-    var(--zen-urlbar-background-base) 60%,
-    transparent
-  ) !important;
-  border-radius: 1em !important;
+  background: #000 !important;
+  outline: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+  outline-offset: -0.5px !important;
 }
 
 #urlbar-input,
@@ -89,6 +88,8 @@ tooltip {
    16px, "New Tab" ~56px at 14px, the chip ~70px (an estimate, see below).
    If the text ends up off-center in some state, adjust these numbers. */
 #urlbar[open][zen-floating-urlbar="true"] {
+  /* Raise Zen's calculated position by 100px, keeping the panel on screen. */
+  top: max(48px, calc(var(--zen-urlbar-top) - 100px)) !important;
   --zen-urlbar-gap: 12px;
   /* Bar edge -> first icon: same as the results' favicons below it, so the
      icon sits in their column. Both sides, to keep the text centered. */
