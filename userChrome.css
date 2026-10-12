@@ -212,19 +212,31 @@ panelmultiview,
   clip-path: inset(0 round 16px) !important;
 }
 
-/* Non-native menus (dropdowns etc.) have no translucent layer behind them -
-   keep them solid black. */
-menupopup {
-  background-color: #000000 !important;
-  /* Inset rather than a real border: the clip-path rounds the box at
-     its edge, and a border-box border would be clipped at the corners. */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
-  /* Tighter corners than the 16px the panels use. */
+/* Context menus and dropdowns: the same macOS menu material as the
+   downloads / extensions panels (see the arrow panel rule below) instead of
+   solid black - real blur of what's behind, which CSS can't do since a menu
+   is a separate OS window. The OS draws the shape, so no clip-path here. */
+menupopup:not(#__a) {
+  appearance: auto !important;
+  -moz-default-appearance: menupopup !important;
+  background: transparent !important;
+  --panel-background-color: transparent !important;
+  --panel-border-color: transparent !important;
+  box-shadow: none !important;
   border-radius: 10px !important;
-  clip-path: inset(0 round 10px) !important;
+  clip-path: none !important;
 }
-menupopup::part(content) {
+menupopup:not(#__a)::part(content) {
+  background-color: transparent !important;
+  border: none !important;
   border-radius: 10px !important;
+}
+
+/* More room between context menu items. */
+menupopup menu,
+menupopup menuitem {
+  padding-block: 6px !important;
+  min-height: 30px !important;
 }
 
 .panel-viewstack,

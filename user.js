@@ -125,3 +125,11 @@ user_pref("browser.sessionhistory.max_total_viewers", 0);
 // protection against Spectre-type attacks between sites. Delete to restore.
 user_pref("fission.webContentIsolationStrategy", 0);
 user_pref("dom.ipc.processCount", 4);
+
+/** LOOK ***/
+// Translucent "acrylic" glass on Zen's own panels and menus (not websites -
+// that's layout.css.backdrop-filter.enabled). Costs some GPU/WindowServer work.
+user_pref("zen.theme.acrylic-elements", false);
+// Translucent window (desktop blurred behind Zen). Turned off earlier because
+// it made scrolling lag and added GPU load - delete this line if that returns.
+user_pref("zen.widget.macos.window-vibrancy", false);
