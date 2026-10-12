@@ -106,3 +106,22 @@ user_pref("browser.download.manager.addToRecentDocs", false);
 
 /** PDF ***/
 user_pref("browser.download.open_pdf_attachments_inline", true);
+
+/** POWER ***/
+// Pause video decoding in background tabs (default; was turned off here) -
+// unwatched YouTube/Twitch tabs kept decoding and heating the Mac.
+user_pref("media.suspend-bkgnd-video.enabled", true);
+
+// Test: no separate Core Animation layer for video - helped WindowServer CPU
+// during video on Apple Silicon in Mozilla bugs 1738926/1747000. Remove if
+// video stutters or nothing changes.
+user_pref("gfx.core-animation.specialize-video", false);
+
+/** MEMORY ***/
+// Back/forward cache: keep at most 2 left pages in memory (default -1 = auto,
+// up to 8) - less RAM; "Back" further than 2 pages reloads instead of instant.
+user_pref("browser.sessionhistory.max_total_viewers", 0);
+// No per-site process isolation (Fission): the biggest RAM saving, but weaker
+// protection against Spectre-type attacks between sites. Delete to restore.
+user_pref("fission.webContentIsolationStrategy", 0);
+user_pref("dom.ipc.processCount", 4);
