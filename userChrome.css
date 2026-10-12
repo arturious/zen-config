@@ -39,8 +39,7 @@ tooltip {
    own transition variable unchanged for the rest of the interface. */
 :root {
   --userchrome-page-transition:
-    scale 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3),
-    opacity 0.2s ease-in-out !important;
+    scale 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3), opacity 0.2s ease-in-out !important;
 }
 
 /* Tab switch animation */
@@ -101,14 +100,19 @@ tooltip {
   --zen-urlbar-label-width: 110px;
 }
 /* Same conditions Firefox shows #urlbar-label-box under. */
-#urlbar[open][zen-floating-urlbar="true"]:is([actiontype="switchtab"]:not([action-override]), [actiontype="extension"]) {
-  --zen-urlbar-label: calc(var(--zen-urlbar-label-width) + var(--zen-urlbar-gap));
+#urlbar[open][zen-floating-urlbar="true"]:is(
+    [actiontype="switchtab"]:not([action-override]),
+    [actiontype="extension"]
+  ) {
+  --zen-urlbar-label: calc(
+    var(--zen-urlbar-label-width) + var(--zen-urlbar-gap)
+  );
 }
 #urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"] {
   --zen-urlbar-newtab: calc(56px + var(--zen-urlbar-gap));
 }
 #urlbar[open][zen-floating-urlbar="true"][searchmode] {
-  --zen-urlbar-chip-width: 70px;   /* estimate of the chip, see below */
+  --zen-urlbar-chip-width: 70px; /* estimate of the chip, see below */
   --zen-urlbar-chip: calc(var(--zen-urlbar-chip-width) + var(--zen-urlbar-gap));
 }
 #urlbar[open][zen-floating-urlbar="true"] .urlbar-input-container {
@@ -130,14 +134,16 @@ tooltip {
    can't measure the chip), so a much longer or shorter name shifts the
    centered text by half the difference. Zen's background kept; a dim thin
    border (inset, no size change) and dimmed system-font text. */
-#urlbar[open][zen-floating-urlbar="true"][searchmode] #urlbar-search-mode-indicator {
+#urlbar[open][zen-floating-urlbar="true"][searchmode]
+  #urlbar-search-mode-indicator {
   margin-inline: 0 var(--zen-urlbar-gap) !important;
 }
 #urlbar-search-mode-indicator {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
 }
 #urlbar-search-mode-indicator-title {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 13px !important;
   font-weight: 500 !important;
   color: rgba(255, 255, 255, 0.7) !important;
@@ -156,9 +162,10 @@ tooltip {
 #urlbar[open][zen-floating-urlbar="true"]:not(#__a) #urlbar-input {
   margin: 0 !important;
   padding: 0 !important;
-  padding-inline-end: calc(var(--zen-urlbar-icon) + var(--zen-urlbar-gap)
-    + var(--zen-urlbar-newtab) + var(--zen-urlbar-chip)
-    + var(--zen-urlbar-label)) !important;
+  padding-inline-end: calc(
+    var(--zen-urlbar-icon) + var(--zen-urlbar-gap) + var(--zen-urlbar-newtab) +
+      var(--zen-urlbar-chip) + var(--zen-urlbar-label)
+  ) !important;
   font-size: 14px !important;
 }
 
@@ -475,7 +482,8 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
 :root:not([zen-single-toolbar="true"]) #urlbar-container ~ :not([hidden]) ~ * {
   margin-inline-start: 0 !important;
 }
-:root:not([zen-single-toolbar="true"]) #urlbar:not([breakout-extend]):not([open]) {
+:root:not([zen-single-toolbar="true"])
+  #urlbar:not([breakout-extend]):not([open]) {
   flex: none !important;
   max-width: 100% !important;
 
@@ -500,7 +508,8 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    Below". Extension menu items get ids prefixed with the extension's widget
    id ({c2c003ee-...} -> _c2c003ee-..._), and the menu lays its items out as
    a flex column, so order moves it without touching the DOM. */
-#tabContextMenu > menuitem[id^="_c2c003ee-bd69-42a2-b0e9-6f34222cb046_-menuitem-"] {
+#tabContextMenu
+  > menuitem[id^="_c2c003ee-bd69-42a2-b0e9-6f34222cb046_-menuitem-"] {
   order: -1 !important;
 }
 
