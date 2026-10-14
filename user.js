@@ -3,7 +3,11 @@ user_pref("devtools.chrome.enabled", true);
 user_pref("devtools.debugger.remote-enabled", true);
 user_pref("browser.urlbar.trimURLs", true);
 user_pref("browser.urlbar.trimWww", true);
-user_pref("layout.css.backdrop-filter.enabled", false);
+// CSS backdrop-filter blur, everywhere - websites AND Zen's own UI (the
+// compact-mode sidebar glass is blur(42px) via backdrop-filter, so with this
+// off the sidebar is see-through without blur). Heavy site headers (YouTube,
+// X) have their blur removed by boosts instead.
+user_pref("layout.css.backdrop-filter.enabled", true);
 user_pref("ui.tooltipDelay", 0);
 user_pref("widget.macos.native-popovers", false);
 user_pref("widget.macos.native-context-menus", false);
@@ -129,7 +133,12 @@ user_pref("dom.ipc.processCount", 4);
 /** LOOK ***/
 // Translucent "acrylic" glass on Zen's own panels and menus (not websites -
 // that's layout.css.backdrop-filter.enabled). Costs some GPU/WindowServer work.
-user_pref("zen.theme.acrylic-elements", false);
-// Translucent window (desktop blurred behind Zen). Turned off earlier because
-// it made scrolling lag and added GPU load - delete this line if that returns.
-user_pref("zen.widget.macos.window-vibrancy", false);
+user_pref("zen.theme.acrylic-elements", true);
+// Translucent window (desktop blurred behind Zen). Was off because it made
+// scrolling lag; back on now that the page clip-path mask is gone (see
+// userChrome.css) - set to false if the lag or heat returns.
+user_pref("zen.widget.macos.window-vibrancy", true);
+// Let the translucent window show through the sidebar/toolbars. Without it
+// Zen paints them fully opaque (alpha 1) even with vibrancy on; with it the
+// toolbar base is drawn at alpha 0.6 (ZenGradientGenerator.mjs).
+user_pref("zen.theme.acrylic-sidebar", true);

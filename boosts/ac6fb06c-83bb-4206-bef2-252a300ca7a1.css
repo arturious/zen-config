@@ -1,0 +1,35 @@
+/* шапка YouTube: сплошной чёрный фон без размытия, на всех страницах */
+#masthead-container,
+ytd-masthead,
+ytd-masthead #background,
+#frosted-glass {
+  background: #000 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  opacity: 1 !important;
+}
+
+/* YouTube: чистая чёрная тема (#000 вместо тёмно-серого #0f0f0f) */
+html[dark],
+[dark] {
+  --yt-spec-base-background: #000 !important;       /* основной фон страниц */
+  --yt-spec-raised-background: #000 !important;     /* приподнятые блоки */
+  --yt-spec-general-background-a: #000 !important;
+  --yt-spec-general-background-b: #000 !important;
+  --yt-spec-general-background-c: #000 !important;
+  --yt-spec-brand-background-solid: #000 !important;
+  --yt-spec-brand-background-primary: #000 !important;
+  --yt-spec-menu-background: #111 !important;       /* выпадающие меню — чуть светлее, чтобы отделялись */
+}
+
+/* на случай мест, где фон задан напрямую */
+html[dark],
+html[dark] body,
+html[dark] ytd-app,
+html[dark] #masthead-container,
+html[dark] ytd-masthead #background,
+html[dark] #frosted-glass,
+html[dark] #guide-content,
+html[dark] ytd-mini-guide-renderer {
+  background: #000 !important;
+}

@@ -50,3 +50,15 @@ main[role="main"] > div > div > div {
   visibility: hidden !important;
 }
 
+
+/* шапка ленты: сплошной чёрный фон вместо полупрозрачного */
+.r-5zmot {
+  background-color: rgb(0, 0, 0) !important;
+}
+
+/* и без размытия (если этого правила ещё нет в бусте) */
+.r-1e5uvyk {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+

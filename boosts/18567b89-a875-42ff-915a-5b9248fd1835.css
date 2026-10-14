@@ -19,3 +19,28 @@
 .tw-root--theme-dark .chat-room {
   background: #000 !important;
 }
+
+/* «Отслеживаемое» в верхнем меню — всегда иконкой-сердцем */
+a[data-a-target="following-link"] > div > div:not([aria-label]) {
+  display: none !important;   /* текст «Отслеживаемое» */
+}
+a[data-a-target="following-link"] > div > div[aria-label] {
+  display: flex !important;   /* иконка сердца */
+}
+
+/* «Отслеживаемое» и «Просмотр» в верхнем меню — всегда иконками */
+:is(a[data-a-target="following-link"], a[data-a-target="browse-link"]) > div > div:not([aria-label]) {
+  display: none !important;   /* текст */
+}
+:is(a[data-a-target="following-link"], a[data-a-target="browse-link"]) > div > div[aria-label] {
+  display: flex !important;   /* иконка */
+}
+
+/* логотип Twitch: «лицо» внутри пузыря — чёрное */
+a[data-a-target="home-link"] polygon[class*="ScFace"] {
+  fill: #000 !important;
+}
+
+
+
+
