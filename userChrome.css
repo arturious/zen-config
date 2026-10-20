@@ -192,7 +192,7 @@ panelmultiview,
 .panel-arrowcontent,
 #appMenu-popup,
 #appMenu-popup panelview,
-#appMenu-protonMainView,
+#appMenu-mainView,
 #widget-overflow,
 #customizationui-widget-panel {
   appearance: none !important;
@@ -499,8 +499,11 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   flex: none !important;
   max-width: 100% !important;
 
+  /* flex: 0 1 auto, not just flex-grow: 0 - Firefox now gives the box (and
+     the input in it) flex: 1, whose 0 basis collapsed the box to nothing and
+     left the URL showing under the buttons on both sides. */
   & .urlbar-input-box {
-    flex-grow: 0 !important;
+    flex: 0 1 auto !important;
     min-width: 0 !important;
   }
   /* No overflow fade. Firefox turns it on with the textoverflow attribute
@@ -509,6 +512,7 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
      the short page URL came back still faded. The bar already sizes to the
      URL, so the fade only mattered for URLs past the 50% cap above. */
   & #urlbar-input {
+    flex: 0 1 auto !important;
     mask-image: none !important;
     field-sizing: content !important;
     min-width: 4ch !important;
