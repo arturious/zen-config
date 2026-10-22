@@ -536,12 +536,6 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   max-height: calc(7 * 49px) !important;
 }
 
-/* Hide the macOS window buttons (close / minimize / zoom) - the window is
-   closed with Cmd+Shift+W, minimized with Cmd+M, fullscreen Ctrl+Cmd+F. */
-.titlebar-buttonbox-container {
-  display: none !important;
-}
-
 /* No clip mask on the page area (confirmed fix for heat). Zen clips the page to its rounded
    corners every frame; on pages with constant animation that clipping runs
    at 60-120 fps and may be what heats the Mac. Corners of the page area
