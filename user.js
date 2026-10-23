@@ -116,29 +116,58 @@ user_pref("browser.download.open_pdf_attachments_inline", true);
 // unwatched YouTube/Twitch tabs kept decoding and heating the Mac.
 user_pref("media.suspend-bkgnd-video.enabled", true);
 
-// Test: no separate Core Animation layer for video - helped WindowServer CPU
-// during video on Apple Silicon in Mozilla bugs 1738926/1747000. Remove if
-// video stutters or nothing changes.
-user_pref("gfx.core-animation.specialize-video", false);
+// Fullscreen video in its own Core Animation layer that macOS shows directly -
+// cheaper for the GPU. Firefox's default on Apple Silicon ("consistently works
+// well"); the old M1 problems with it (bugs 1733148, 1738926, 1774939) were
+// fixed in 2021-2022.
+user_pref("gfx.core-animation.specialize-video", true);
 
 /** MEMORY ***/
-// Back/forward cache: keep at most 2 left pages in memory (default -1 = auto,
-// up to 8) - less RAM; "Back" further than 2 pages reloads instead of instant.
-user_pref("browser.sessionhistory.max_total_viewers", 0);
+// Back/forward cache: keep at most 4 left pages in memory (default -1 = auto,
+// up to 8) - "Back" is instant for the last 4 pages, further back reloads.
+user_pref("browser.sessionhistory.max_total_viewers", 4);
 // No per-site process isolation (Fission): the biggest RAM saving, but weaker
 // protection against Spectre-type attacks between sites. Delete to restore.
 user_pref("fission.webContentIsolationStrategy", 0);
 user_pref("dom.ipc.processCount", 4);
 
+/** NETWORK & CACHE (Betterfox "Fastfox") ***/
+user_pref("browser.cache.memory.capacity", 131072); // memory cache 128 MB
+user_pref("network.http.max-persistent-connections-per-server", 10);
+user_pref("network.http.pacing.requests.enabled", false); // don't hold back requests
+user_pref("network.dnsCacheExpiration", 3600); // keep DNS answers 1 hour
+user_pref("network.ssl_tokens_cache_capacity", 10240); // faster repeat TLS handshakes
+user_pref("content.notify.interval", 100000); // fewer reflows while loading
+user_pref("gfx.canvas.accelerated.cache-items", 32768);
+user_pref("gfx.canvas.accelerated.cache-size", 4096);
+user_pref("gfx.content.skia-font-cache-size", 32);
+
+/** GPU ***/
+// Everything on the GPU, even where Firefox would fall back to the CPU
+// (blocklisted driver, failed check). force-enabled skips those checks -
+// if a site renders black/garbled or Zen crashes, delete that line first.
+user_pref("gfx.webrender.all", true); // page drawing: WebRender on the GPU
+user_pref("gfx.webrender.software", false); // never the CPU WebRender fallback
+user_pref("gfx.webrender.compositor", true); // layers composited by macOS Core Animation
+user_pref("gfx.webrender.compositor.force-enabled", true);
+user_pref("layers.acceleration.force-enabled", true);
+user_pref("media.hardware-video-decoding.enabled", true); // video decoded by the media engine
+user_pref("media.hardware-video-decoding.force-enabled", true);
+user_pref("media.av1.enabled", true); // AV1 is hardware-decoded on M3+
+user_pref("gfx.canvas.accelerated", true); // <canvas> drawn on the GPU
+user_pref("gfx.canvas.accelerated.force-enabled", true);
+user_pref("webgl.force-enabled", true);
+user_pref("dom.webgpu.enabled", true);
+
 /** LOOK ***/
 // Translucent "acrylic" glass on Zen's own panels and menus (not websites -
 // that's layout.css.backdrop-filter.enabled). Costs some GPU/WindowServer work.
-user_pref("zen.theme.acrylic-elements", true);
+user_pref("zen.theme.acrylic-elements", false);
 // Translucent window (desktop blurred behind Zen). Was off because it made
 // scrolling lag; back on now that the page clip-path mask is gone (see
 // userChrome.css) - set to false if the lag or heat returns.
-user_pref("zen.widget.macos.window-vibrancy", true);
+user_pref("zen.widget.macos.window-vibrancy", false);
 // Let the translucent window show through the sidebar/toolbars. Without it
 // Zen paints them fully opaque (alpha 1) even with vibrancy on; with it the
 // toolbar base is drawn at alpha 0.6 (ZenGradientGenerator.mjs).
-user_pref("zen.theme.acrylic-sidebar", true);
+user_pref("zen.theme.acrylic-sidebar", false);
