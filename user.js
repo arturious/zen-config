@@ -3,11 +3,11 @@ user_pref("devtools.chrome.enabled", true);
 user_pref("devtools.debugger.remote-enabled", true);
 user_pref("browser.urlbar.trimURLs", true);
 user_pref("browser.urlbar.trimWww", true);
-// CSS backdrop-filter blur, everywhere - websites AND Zen's own UI (the
-// compact-mode sidebar glass is blur(42px) via backdrop-filter, so with this
-// off the sidebar is see-through without blur). Heavy site headers (YouTube,
-// X) have their blur removed by boosts instead.
-user_pref("layout.css.backdrop-filter.enabled", true);
+// CSS backdrop-filter blur off, everywhere - websites AND Zen's own UI (the
+// compact-mode sidebar glass is blur(42px) via backdrop-filter, so the sidebar
+// is see-through without blur now). Off for heat: heavy sites redraw their
+// blurred headers/panels on the GPU on every scroll. true to bring it back.
+user_pref("layout.css.backdrop-filter.enabled", false);
 user_pref("ui.tooltipDelay", 0);
 user_pref("widget.macos.native-popovers", false);
 user_pref("widget.macos.native-context-menus", false);
@@ -102,6 +102,10 @@ user_pref("browser.ml.chat.menu", false);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.ai.control.default", "blocked");
+/** TRANSLATIONS ***/
+// Built-in translator off (its URL bar icon and "Translate this page?" popup
+// go with it) - pages are translated with the TWP extension instead.
+user_pref("browser.translations.enable", false);
 /** FULLSCREEN NOTICE ***/
 user_pref("full-screen-api.transition-duration.enter", "0 0");
 user_pref("full-screen-api.transition-duration.leave", "0 0");

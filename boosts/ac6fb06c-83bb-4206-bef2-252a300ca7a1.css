@@ -33,3 +33,8 @@ html[dark] #guide-content,
 html[dark] ytd-mini-guide-renderer {
   background: #000 !important;
 }
+
+/* шрифт как в интерфейсе Zen: системный SF Pro вместо Roboto */
+html, body, * {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+}
