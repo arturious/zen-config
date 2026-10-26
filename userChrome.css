@@ -1,7 +1,3 @@
-.zen-workspace-pinned-tabs-section {
-  display: none !important;
-}
-
 /* Remove the fade-in transition on tooltips — ui.tooltipDelay only
    controls the wait before showing, not the appear animation itself */
 tooltip {
