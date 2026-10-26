@@ -549,3 +549,26 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
 browser {
   clip-path: none !important;
 }
+
+/* Extension badges (e.g. uBlock Origin's blocked count) in the extensions
+   panel: Firefox caps the badge at 20px (--toolbarbutton-badge-max-width),
+   so a third digit got clipped. Room for up to 4 digits; font size is left
+   as is (9px on macOS). */
+.unified-extensions-item .toolbarbutton-badge {
+  --toolbarbutton-badge-max-width: 32px !important;
+  max-width: 32px !important;
+  text-overflow: clip !important;
+}
+
+/* Badges on extensions pinned to the toolbar (e.g. the red "2"): bigger
+   (12px instead of Firefox's 11px on macOS) and wide enough for 4+ digits
+   instead of the 20px cap. */
+toolbar .webextension-browser-action .toolbarbutton-badge {
+  --toolbarbutton-badge-font-size: 12px !important;
+  font-size: 12px !important;
+  min-width: 15px !important;
+  --toolbarbutton-badge-max-width: 40px !important;
+  max-width: 40px !important;
+  padding-inline: 3px !important;
+  text-overflow: clip !important;
+}
