@@ -103,6 +103,7 @@ user_pref("browser.translations.enable", false);
 /** FULLSCREEN NOTICE ***/
 user_pref("full-screen-api.transition-duration.enter", "0 0");
 user_pref("full-screen-api.transition-duration.leave", "0 0");
+user_pref("full-screen-api.warning.timeout", 2000);   // fullscreen banner shows 2s
 /** DOWNLOADS ***/
 user_pref("browser.download.manager.addToRecentDocs", false);
 
@@ -169,3 +170,5 @@ user_pref("zen.widget.macos.window-vibrancy", false);
 // Zen paints them fully opaque (alpha 1) even with vibrancy on; with it the
 // toolbar base is drawn at alpha 0.6 (ZenGradientGenerator.mjs).
 user_pref("zen.theme.acrylic-sidebar", false);
+// Black instead of gray behind pages that haven't painted yet (dark mode).
+user_pref("browser.display.background_color.dark", "#000000");

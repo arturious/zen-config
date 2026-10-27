@@ -285,21 +285,87 @@ menupopup menuitem {
 }
 
 /* "site.com is now full screen / Exit Full Screen (esc)" banner - same
-   pill as Zen's toasts ("New background tab opened!", see the toast
-   rule below): tint, rim, top highlight, shadow, and Zen's toast radius. */
+   YouTube-style pill as Zen's toasts (see the toast rule below). The lock
+   icon and the Exit button sit in small rounded-square chips, like the
+   toast's "Tab" button. */
 #fullscreen-warning {
-  background: rgba(36, 36, 38, 0.92) !important;   /* context menu gray */
-  border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 14px !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.35) !important;
-  color: #ffffff !important;
+  background: #272727 !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+  color: #f1f1f1 !important;
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 13px !important;
-  padding: 8px 8px 8px 14px !important;
+  font-weight: 500 !important;
+  min-height: 36px !important;
+  padding: 6px 10px !important;
+  gap: 0 !important;
+  /* Hiding works like Zen's new-tab toast: fades out and shrinks to 0.5 in
+     place in 0.2s, then (invisible) jumps back up to Firefox's -100px. */
+  opacity: 0 !important;
+  scale: 0.5 !important;
+  transform-origin: top center !important;
+  transition:
+    opacity 0.2s ease-out,
+    scale 0.2s ease-out,
+    translate 0s linear 0.2s !important;
+  will-change: translate, opacity, scale !important;
+  /* hoverable, so it stays while the pointer is on it */
+  pointer-events: auto !important;
+}
+/* Firefox hides it on a timer by sliding it up; while hovered it holds the
+   on-screen position, so the slide (and the hide that follows it) waits
+   until the pointer leaves. Moving over it also restarts Firefox's timer. */
+/* Showing: slides down from the top as fast as the new-tab toast slides in
+   (0.2s, same curve) while growing from 0.5. 16px from the top, higher
+   than Firefox's 50px. */
+#fullscreen-warning:is([onscreen], [ontop]) {
+  opacity: 1 !important;
+  scale: 1 !important;
+  transition:
+    translate 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1),
+    opacity 0.2s ease-out,
+    scale 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) !important;
+}
+#fullscreen-warning[onscreen],
+#fullscreen-warning:not([ontop]):hover {
+  translate: 0 16px !important;
+}
+#fullscreen-warning:hover {
+  opacity: 1 !important;
+  scale: 1 !important;
+}
+#fullscreen-warning .pointerlockfswarning-domain-text,
+#fullscreen-warning .pointerlockfswarning-generic-text {
+  margin: 0 10px !important;
+}
+#fullscreen-warning .pointerlockfswarning-domain {
+  font-weight: 600 !important;
+}
+#fullscreen-warning::before {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+  background-color: #3d3d3d !important;
+  background-size: 14px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+#fullscreen-warning #fullscreen-exit-button {
+  appearance: none !important;
+  background: #3d3d3d !important;
+  color: #f1f1f1 !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  min-height: 24px !important;
+  height: 24px !important;
+  padding: 0 10px !important;
+  font: inherit !important;
+}
+#fullscreen-warning #fullscreen-exit-button:hover {
+  background: #4d4d4d !important;
 }
 
 /* Downloads / history / other arrow panels. With widget.macos.native-popovers
@@ -353,16 +419,46 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
    path, which on macOS may visibly dim it while the toast is shown.
    :not(#__a) outweighs Zen's `#zen-toast-container .zen-toast`. */
 #zen-toast-container:not(#__a) .zen-toast {
-  background: rgba(36, 36, 38, 0.92) !important;   /* context menu gray */
-  border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.35) !important;
-  color: #ffffff !important;
+  /* looks like YouTube's dark pill buttons ("Share"): #272727 pill, 36px
+     tall, 16px side padding, #f1f1f1 text, no border or shadow */
+  background: #272727 !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+  color: #f1f1f1 !important;
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 13px !important;
+  font-weight: 500 !important;   /* same as the address bar's text */
+  --zen-toast-padding: 0px !important;
+  --zen-toast-max-height: 36px !important;
+  padding: 0 16px !important;
+  gap: 6px !important;
+}
+#zen-toast-container:not(#__a) .zen-toast :is(label, .description) {
+  font: inherit !important;
+  color: inherit !important;
+}
+#zen-toast-container:not(#__a) .zen-toast label {
+  margin: 0 3px !important;
+}
+/* the "Tab" button and shortcut chips: small rounded-square chips, like
+   the fullscreen banner's lock icon and Exit button */
+#zen-toast-container:not(#__a) .zen-toast :is(button, label span) {
+  background: #3d3d3d !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 8px !important;
+  margin: 0 !important;
+  min-height: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+  color: inherit !important;
+  font: inherit !important;
+}
+#zen-toast-container:not(#__a) .zen-toast button:hover {
+  background: #4d4d4d !important;
 }
 
 /* Swipe back/forward indicator as a glass circle (60px) that slides in
@@ -571,4 +667,29 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   max-width: 40px !important;
   padding-inline: 3px !important;
   text-overflow: clip !important;
+}
+
+/* Black instead of gray while a page is loading (before it paints its own
+   background). Pairs with browser.display.background_color.dark in user.js. */
+#tabbrowser-tabpanels,
+#tabbrowser-tabpanels browser {
+  background-color: #000 !important;
+}
+
+/* Zen's toasts in the top-left corner, sliding in from the left screen edge
+   instead of popping up top-right. Zen's own JS still animates scale (inline
+   transform), so it grows from its left side; the slide is a separate
+   `translate` animation, which doesn't clash with that transform. */
+#zen-toast-container:not(#__a) {
+  right: auto !important;
+  left: calc(var(--zen-toast-spacing) + 12px) !important;
+  align-items: start !important;
+}
+#zen-toast-container:not(#__a) .zen-toast {
+  transform-origin: left center !important;
+  animation: userchrome-toast-in 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+@keyframes userchrome-toast-in {
+  from { translate: calc(-100% - 16px) 0; }
+  to   { translate: 0 0; }
 }
