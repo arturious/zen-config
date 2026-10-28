@@ -299,7 +299,7 @@ menupopup menuitem {
   font-size: 13px !important;
   font-weight: 500 !important;
   min-height: 36px !important;
-  padding: 6px 10px !important;
+  padding: 6px 16px !important;   /* same as the new-tab toast */
   gap: 0 !important;
   /* Hiding works like Zen's new-tab toast: fades out and shrinks to 0.5 in
      place in 0.2s, then (invisible) jumps back up to Firefox's -100px. */
