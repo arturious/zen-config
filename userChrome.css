@@ -5,14 +5,14 @@ tooltip {
 }
 
 /* Hide Zen's macOS titlebar controls. */
-.titlebar-buttonbox-container,
+/*.titlebar-buttonbox-container,
 .titlebar-buttonbox,
 .titlebar-close,
 .titlebar-min,
 .titlebar-max,
 .titlebar-restore {
   display: none !important;
-}
+}*/
 
 #urlbar:not([usertyping], [searchmode]) > .urlbarView {
   display: none !important;
