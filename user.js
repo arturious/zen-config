@@ -10,6 +10,7 @@ user_pref("browser.urlbar.trimWww", true);
 user_pref("layout.css.backdrop-filter.enabled", false);
 user_pref("ui.tooltipDelay", 0);
 user_pref("zen.view.hide-window-controls", false);
+user_pref("zen.theme.content-element-separation", 0);
 // user_pref("layout.css.devPixelsPerPx", 1.95);
 // user_pref("zen.view.experimental-no-window-controls", true);
 user_pref("widget.macos.native-popovers", false);

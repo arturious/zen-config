@@ -14,6 +14,11 @@ tooltip {
   display: none !important;
 }*/
 
+/* Window controls closer to the window's left edge. */
+.titlebar-buttonbox-container {
+  margin-inline-start: 6px !important;
+}
+
 #urlbar:not([usertyping], [searchmode]) > .urlbarView {
   display: none !important;
 }
