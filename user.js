@@ -9,7 +9,7 @@ user_pref("browser.urlbar.trimWww", true);
 // blurred headers/panels on the GPU on every scroll. true to bring it back.
 user_pref("layout.css.backdrop-filter.enabled", false);
 user_pref("ui.tooltipDelay", 0);
-user_pref("layout.css.devPixelsPerPx", "1.8");
+user_pref("layout.css.devPixelsPerPx", "1.95");
 user_pref("zen.view.hide-window-controls", true);
 user_pref("zen.view.experimental-no-window-controls", true);
 user_pref("widget.macos.native-popovers", false);
