@@ -11,6 +11,9 @@ user_pref("layout.css.backdrop-filter.enabled", false);
 user_pref("ui.tooltipDelay", 0);
 user_pref("zen.view.hide-window-controls", false);
 user_pref("zen.theme.content-element-separation", 0);
+ user_pref("zen.view.experimental-rounded-view", false);
+ user_pref("zen.tab-unloader.enabled", true);
+ user_pref("zen.tab-unloader.timeout-minutes", 10);
 // user_pref("layout.css.devPixelsPerPx", 1.95);
 // user_pref("zen.view.experimental-no-window-controls", true);
 user_pref("widget.macos.native-popovers", false);
@@ -43,6 +46,7 @@ user_pref("media.memory_cache_max_size", 65536);
 user_pref("browser.sessionstore.interval", 60000);
 /** SPECULATIVE LOADING ***/
 user_pref("network.http.speculative-parallel-limit", 0);
+user_pref("browser.newtab.preload", false);
 user_pref("network.dns.disablePrefetch", true);
 user_pref("network.dns.disablePrefetchFromHTTPS", true);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
