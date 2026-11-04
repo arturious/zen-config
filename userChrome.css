@@ -75,7 +75,8 @@ tooltip {
 #urlbar[open][zen-floating-urlbar="true"],
 #urlbar[open][zen-floating-urlbar="true"] .urlbar-background {
   corner-shape: round !important;
-  border-radius: 16px !important;
+  /* same corners as the sidebar and the toasts (see :root below) */
+  border-radius: var(--userchrome-sidebar-radius) !important;
 }
 
 #urlbar[open][zen-floating-urlbar="true"] .urlbar-background {
@@ -103,8 +104,8 @@ tooltip {
   --zen-urlbar-gap: 12px;
   /* Bar edge -> first icon: same as the results' favicons below it, so the
      icon sits in their column. Both sides, to keep the text centered. */
-  --zen-urlbar-edge: 22px;
-  --zen-urlbar-icon: 16px;
+  --zen-urlbar-edge: 14px;
+  --zen-urlbar-icon: 32px;   /* 16px icon in a 32x24 chip, see #identity-icon */
   --zen-urlbar-newtab: 0px;
   --zen-urlbar-chip: 0px;
   --zen-urlbar-label: 0px;
@@ -138,6 +139,35 @@ tooltip {
   margin: 0 !important;
   padding: 0 !important;
   font-size: 14px !important;
+}
+/* The page icon / magnifier in the same chip as the toasts' "Tab" button:
+   16px icon, 8px side padding (32x24), #3d3d3d, 6px corners, #4d4d4d on
+   hover. On the icon itself, not its box: on Cmd+T the box also holds the
+   "New Tab" text. The edge above is 8px less to keep the icon in the
+   results' favicon column. */
+#urlbar[open][zen-floating-urlbar="true"] #identity-icon {
+  box-sizing: content-box !important;
+  width: 16px !important;
+  height: 16px !important;
+  padding: 4px 8px !important;
+  background: #3d3d3d !important;
+  border-radius: 6px !important;
+  opacity: 1 !important;
+}
+/* No Firefox hover box around the icon and "New Tab" - only the chip
+   lightens. */
+#urlbar[open][zen-floating-urlbar="true"] :is(#identity-box, #identity-icon-box),
+#urlbar[open][zen-floating-urlbar="true"] :is(#identity-box, #identity-icon-box):is(:hover, :hover:active, [open]) {
+  background: none !important;
+  box-shadow: none !important;
+}
+/* Cmd+T dims only the icon (fill-opacity), not the chip behind it. */
+#urlbar[open][zen-floating-urlbar="true"][zen-newtab="true"] #identity-icon {
+  filter: none !important;
+  fill-opacity: 0.5 !important;
+}
+#urlbar[open][zen-floating-urlbar="true"] #identity-icon-box:hover #identity-icon {
+  background: #4d4d4d !important;
 }
 /* Search engine chip (Google, ChatGPT...) - Zen draws it as the older
    #urlbar-search-mode-indicator. Sized to its text; the centering above
@@ -658,6 +688,11 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   > menuitem[id^="_c2c003ee-bd69-42a2-b0e9-6f34222cb046_-menuitem-"] {
   order: -1 !important;
 }
+/* Page context menu: TWP's "Translate to Russian" first, above "Back". */
+#contentAreaContextMenu
+  > menuitem[id^="_036a55b4-5e72-4d05-a06c-cba2dfcc134a_-menuitem-"] {
+  order: -1 !important;
+}
 
 /* URL bar results: Zen caps the list at 244px (5 rows of 49px - the top
    "Search with..." row + 4 suggestions; the rest scroll, scrollbar hidden).
@@ -776,4 +811,31 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
     scale: 0.5;
     visibility: hidden;
   }
+}
+
+/* Zen's copy-link button in the address bar: link.svg is a filled,
+   heavier glyph than the outlined icons, so it looked brighter. Painted
+   in the address text color (--toolbar-field-color), same on hover. */
+#zen-copy-url-button:not([disabled]) > .urlbar-icon {
+  fill: var(--toolbar-field-color) !important;
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
+  /* Thicker glyph: the SVG has no stroke to widen, so tight same-color
+     shadows around it make the lines look bolder. */
+  filter: drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) !important;
+}
+
+/* Copy-link icon mirrored horizontally in every state, including while
+   the page loads (the button is [disabled] until the URL is copyable). */
+#zen-copy-url-button > .urlbar-icon {
+  scale: -1 1 !important;
+}
+
+/* Back, forward, reload and stop: the address text color (--toolbar-field-color), with the
+   same bolder glyph as the copy-link icon above. */
+:is(#back-button, #forward-button, #reload-button, #stop-button)
+  > .toolbarbutton-icon {
+  fill: var(--toolbar-field-color) !important;
+  fill-opacity: 1 !important;
+  filter: drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) !important;
 }
