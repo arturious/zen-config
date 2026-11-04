@@ -157,7 +157,7 @@ user_pref("gfx.webrender.compositor.force-enabled", true);
 user_pref("layers.acceleration.force-enabled", true);
 user_pref("media.hardware-video-decoding.enabled", true); // video decoded by the media engine
 user_pref("media.hardware-video-decoding.force-enabled", true);
-user_pref("media.av1.enabled", true); // AV1 is hardware-decoded on M3+
+user_pref("media.av1.enabled", false); // off: sites fall back to VP9/H.264 (less heat on 1080p60+)
 user_pref("gfx.canvas.accelerated", true); // <canvas> drawn on the GPU
 user_pref("gfx.canvas.accelerated.force-enabled", true);
 user_pref("webgl.force-enabled", true);
