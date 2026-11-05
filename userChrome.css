@@ -774,11 +774,14 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
    must not bring a toast this CSS has already hidden back. */
 #zen-toast-container:not(#__a)
   .zen-toast:is(
-    [style*="scale(0.0"],
-    [style*="scale(0.1"],
-    [style*="scale(0.2"],
-    [style*="scale(0.3"],
-    [style*="scale(0.4"]
+      [style*="scale: 0.1"],
+      [style*="scale:0.1"],
+      [style*="scale: 0.2"],
+      [style*="scale:0.2"],
+      [style*="scale: 0.3"],
+      [style*="scale:0.3"],
+      [style*="scale: 0.4"],
+      [style*="scale:0.4"]
   ) {
   animation: userchrome-toast-in 0.6s linear;
 }
@@ -820,15 +823,98 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   fill: var(--toolbar-field-color) !important;
   fill-opacity: 1 !important;
   opacity: 1 !important;
-  /* Thicker glyph: the SVG has no stroke to widen, so tight same-color
-     shadows around it make the lines look bolder. */
-  filter: drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) !important;
+  /* Thicker glyph + fade for copy swap. opacity() uses --uc-link-op so the
+     keyframes can fade the glyph despite opacity:1 !important. */
+  filter: opacity(var(--uc-link-op, 1)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) !important;
 }
 
 /* Copy-link icon mirrored horizontally in every state, including while
    the page loads (the button is [disabled] until the URL is copyable). */
 #zen-copy-url-button > .urlbar-icon {
   scale: -1 1 !important;
+}
+
+/* After copy: Zen link styles kept (fill / mirror untouched).
+   2.2s timeline matches toast-out. :active resets so each click replays
+   checkmark from the start (toast already re-springs on re-copy). */
+@property --uc-link-op {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+#zen-copy-url-button {
+  position: relative !important;
+  overflow: clip !important;
+}
+
+#zen-copy-url-button > .urlbar-icon {
+  --uc-link-op: 1;
+  transform-origin: center !important;
+  transform: scale(1);
+}
+
+#zen-copy-url-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  background-color: var(--toolbar-field-color);
+  filter: drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color));
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%206%209%2017l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%206%209%2017l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+:root:has(
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-current-url-confirmation"],
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"]
+) #zen-copy-url-button > .urlbar-icon {
+  animation: userchrome-copy-link-away 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+:root:has(
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-current-url-confirmation"],
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"]
+) #zen-copy-url-button::after {
+  animation: userchrome-copy-check-draw 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* Each press clears the finished animation so mouseup starts it again. */
+#zen-copy-url-button:active > .urlbar-icon {
+  animation: none !important;
+  --uc-link-op: 1;
+  transform: scale(1);
+}
+
+#zen-copy-url-button:active::after {
+  animation: none !important;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* 0–0.2s: link away / check draws. Hold until 2.0s (toast-out start).
+   2.0–2.2s: reverse with toast-out. */
+@keyframes userchrome-copy-link-away {
+  0%   { --uc-link-op: 1; transform: scale(1); }
+  9%   { --uc-link-op: 0; transform: scale(0.35); }
+  91%  { --uc-link-op: 0; transform: scale(0.35); }
+  100% { --uc-link-op: 1; transform: scale(1); }
+}
+
+@keyframes userchrome-copy-check-draw {
+  0%   { opacity: 0; clip-path: inset(0 100% 0 0); }
+  9%   { opacity: 1; clip-path: inset(0 0 0 0); }
+  91%  { opacity: 1; clip-path: inset(0 0 0 0); }
+  100% { opacity: 0; clip-path: inset(0 100% 0 0); }
 }
 
 /* Back, forward, reload and stop: the address text color (--toolbar-field-color), with the
