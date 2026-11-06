@@ -960,5 +960,7 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   display: none !important;
 }
 
-
-
+/* Boosting icon */
+#zen-site-data-icon-button[boosting] .zen-site-data-boost-animation {
+  scale: 1.1 !important;
+}
