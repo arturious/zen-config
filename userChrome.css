@@ -925,3 +925,40 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   fill-opacity: 1 !important;
   filter: drop-shadow(0 0 0.2px var(--toolbar-field-color)) drop-shadow(0 0 0.2px var(--toolbar-field-color)) !important;
 }
+
+/* Pure black sidebar and toolbar background */
+#navigator-toolbox,
+#zen-appcontent-navbar-container {
+  background: #000 !important;
+}
+
+/* Zen 1.24.1b: sidebar theme paint is #zen-browser-background::after
+   via --zen-main-browser-background (default dark #131313).
+   Source: zen-browser/desktop@1.24.1b src/zen/common/styles/zen-browser-ui.css */
+#zen-browser-background {
+  --zen-main-browser-background: #000 !important;
+  --zen-main-browser-background-old: #000 !important;
+}
+#zen-browser-background::before,
+#zen-browser-background::after {
+  background: #000 !important;
+}
+
+/* Zen 1.24.1b: sidebar chrome paint is #zen-toolbar-background
+   (inside navigator-toolbox; ::after uses --zen-main-browser-background-toolbar).
+   Source: zen-browser/desktop@1.24.1b navigator-toolbox-inc-xhtml.patch,
+   zen-browser-ui.css (.zen-toolbar-background), compact-mode/sidebar.inc.css */
+#zen-toolbar-background {
+  background: #000 !important;
+}
+#zen-toolbar-background::before,
+#zen-toolbar-background::after {
+  background: #000 !important;
+  opacity: 1 !important;
+}
+#zen-toolbar-background .zen-browser-grain {
+  display: none !important;
+}
+
+
+
