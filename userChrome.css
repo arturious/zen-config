@@ -490,6 +490,16 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   padding: 0 8px !important;
   gap: 6px !important;
 }
+/* The toast container lives inside #zen-tabbox-wrapper, which Zen makes a
+   stacking context at z-index 0, while the top toolbar
+   (#zen-appcontent-navbar-wrapper, "Multiple toolbars" layout) sits at
+   z-index 1 in the same parent. So on Zen 1.24.2b the toolbar painted over
+   the toasts at the top-right spot and they were invisible. Lifts the wrapper
+   only while a toast is up; the open address bar is a popover and stays on
+   top either way. */
+#zen-tabbox-wrapper:has(> #tabbrowser-tabbox > #zen-toast-container > .zen-toast) {
+  z-index: 2 !important;
+}
 #zen-toast-container:not(#__a) .zen-toast :is(label, .description) {
   font: inherit !important;
   color: inherit !important;
