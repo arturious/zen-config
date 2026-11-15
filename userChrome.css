@@ -65,11 +65,18 @@ tooltip {
   opacity: 1 !important;
 }
 
-/* No pointer-events: none here - Zen closes the floating search when the
-   page is clicked, and blocking clicks on it made closing take two clicks. */
+/* URL bar zoom animation: the page zooms in, blurs and dims behind the
+   floating search. No pointer-events: none here - Zen closes the floating
+   search when the page is clicked, and blocking clicks on it made closing
+   take two clicks. */
+#browser:not(:has(.zen-glance-background)) #tabbrowser-tabpanels {
+  transition:
+    scale 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3), filter 0.15s ease-in-out !important;
+}
+
 #browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels {
-  scale: 1 !important;
-  filter: brightness(70%) !important;
+  scale: 1.1 !important;
+  filter: blur(10px) brightness(70%) !important;
 }
 
 #urlbar[open][zen-floating-urlbar="true"],
