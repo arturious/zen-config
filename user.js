@@ -8,7 +8,6 @@ user_pref("browser.urlbar.trimWww", true);
 // is see-through without blur now). Off for heat: heavy sites redraw their
 // blurred headers/panels on the GPU on every scroll. true to bring it back.
 user_pref("layout.css.backdrop-filter.enabled", false);
-user_pref("ui.tooltipDelay", 0);
 user_pref("zen.view.hide-window-controls", false);
 user_pref("zen.theme.content-element-separation", 0);
  user_pref("zen.view.experimental-rounded-view", false);
@@ -150,19 +149,18 @@ user_pref("gfx.content.skia-font-cache-size", 32);
 // Everything on the GPU, even where Firefox would fall back to the CPU
 // (blocklisted driver, failed check). force-enabled skips those checks -
 // if a site renders black/garbled or Zen crashes, delete that line first.
-user_pref("gfx.webrender.all", true); // page drawing: WebRender on the GPU
+/*user_pref("gfx.webrender.all", true); // page drawing: WebRender on the GPU
 user_pref("gfx.webrender.software", false); // never the CPU WebRender fallback
 user_pref("gfx.webrender.compositor", true); // layers composited by macOS Core Animation
 user_pref("gfx.webrender.compositor.force-enabled", true);
 user_pref("layers.acceleration.force-enabled", true);
 user_pref("media.hardware-video-decoding.enabled", true); // video decoded by the media engine
 user_pref("media.hardware-video-decoding.force-enabled", true);
-user_pref("media.av1.enabled", false); // off: sites fall back to VP9/H.264 (less heat on 1080p60+)
 user_pref("gfx.canvas.accelerated", true); // <canvas> drawn on the GPU
 user_pref("gfx.canvas.accelerated.force-enabled", true);
 user_pref("webgl.force-enabled", true);
 user_pref("dom.webgpu.enabled", true);
-
+*/
 /** LOOK ***/
 // Translucent "acrylic" glass on Zen's own panels and menus (not websites -
 // that's layout.css.backdrop-filter.enabled). Costs some GPU/WindowServer work.
