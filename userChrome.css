@@ -1,8 +1,8 @@
 /* Remove the fade-in transition on tooltips — ui.tooltipDelay only
-   controls the wait before showing, not the appear animation itself */
+   controls the wait before showing, not the appear animation itself 
 tooltip {
   transition: none !important;
-}
+}*/
 
 /* Hide Zen's macOS titlebar controls. */
 /*.titlebar-buttonbox-container,
