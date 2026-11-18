@@ -217,8 +217,97 @@ tooltip {
   font-size: 14px !important;
 }
 
-#urlbar-zoom-button {
+/* Zoom: the zoom button stays hidden in the address bar, and when the zoom
+   changes it pops up for a moment as a black pill at the toasts' spot (top
+   right), like Zen's "Zoom: 110%" toast in the single-toolbar layout - Zen
+   only shows that toast there or with compact.hide-toolbar.
+   Firefox sets [animate] on the button on every zoom change but never
+   removes it, so one animation would play only once. Two identical
+   animations alternate by zoom level (every 5% step flips the name), so
+   each step restarts it. No pill when going back to 100%: Firefox hides the
+   button at the default zoom. */
+#urlbar-zoom-button:not([animate]) {
   display: none !important;
+}
+#urlbar-zoom-button[animate] {
+  position: fixed !important;
+  top: 52px !important;
+  right: 12px !important;
+  z-index: 10000 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  height: 36px !important;
+  padding: 0 12px !important;
+  background: #000 !important;
+  outline: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+  outline-offset: -0.5px !important;
+  border-radius: var(--userchrome-sidebar-radius) !important;
+  color: #f1f1f1 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  opacity: 0;
+  animation: userchrome-zoom-pill-a 1.6s ease forwards !important;
+}
+#urlbar-zoom-button[animate][label="30%"],
+#urlbar-zoom-button[animate][label="40%"],
+#urlbar-zoom-button[animate][label="50%"],
+#urlbar-zoom-button[animate][label="60%"],
+#urlbar-zoom-button[animate][label="70%"],
+#urlbar-zoom-button[animate][label="80%"],
+#urlbar-zoom-button[animate][label="90%"],
+#urlbar-zoom-button[animate][label="100%"],
+#urlbar-zoom-button[animate][label="110%"],
+#urlbar-zoom-button[animate][label="120%"],
+#urlbar-zoom-button[animate][label="130%"],
+#urlbar-zoom-button[animate][label="140%"],
+#urlbar-zoom-button[animate][label="150%"],
+#urlbar-zoom-button[animate][label="160%"],
+#urlbar-zoom-button[animate][label="170%"],
+#urlbar-zoom-button[animate][label="180%"],
+#urlbar-zoom-button[animate][label="190%"],
+#urlbar-zoom-button[animate][label="200%"],
+#urlbar-zoom-button[animate][label="210%"],
+#urlbar-zoom-button[animate][label="220%"],
+#urlbar-zoom-button[animate][label="230%"],
+#urlbar-zoom-button[animate][label="240%"],
+#urlbar-zoom-button[animate][label="250%"],
+#urlbar-zoom-button[animate][label="260%"],
+#urlbar-zoom-button[animate][label="270%"],
+#urlbar-zoom-button[animate][label="280%"],
+#urlbar-zoom-button[animate][label="290%"],
+#urlbar-zoom-button[animate][label="300%"],
+#urlbar-zoom-button[animate][label="310%"],
+#urlbar-zoom-button[animate][label="320%"],
+#urlbar-zoom-button[animate][label="330%"],
+#urlbar-zoom-button[animate][label="340%"],
+#urlbar-zoom-button[animate][label="350%"],
+#urlbar-zoom-button[animate][label="360%"],
+#urlbar-zoom-button[animate][label="370%"],
+#urlbar-zoom-button[animate][label="380%"],
+#urlbar-zoom-button[animate][label="390%"],
+#urlbar-zoom-button[animate][label="400%"],
+#urlbar-zoom-button[animate][label="410%"],
+#urlbar-zoom-button[animate][label="420%"],
+#urlbar-zoom-button[animate][label="430%"],
+#urlbar-zoom-button[animate][label="440%"],
+#urlbar-zoom-button[animate][label="450%"],
+#urlbar-zoom-button[animate][label="460%"],
+#urlbar-zoom-button[animate][label="470%"],
+#urlbar-zoom-button[animate][label="480%"],
+#urlbar-zoom-button[animate][label="490%"],
+#urlbar-zoom-button[animate][label="500%"] {
+  animation-name: userchrome-zoom-pill-b !important;
+}
+@keyframes userchrome-zoom-pill-a {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.9); }
+  10%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+@keyframes userchrome-zoom-pill-b {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.9); }
+  10%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: scale(0.95); }
 }
 
 #urlbar-container[breakout="true"] {
