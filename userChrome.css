@@ -980,7 +980,12 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   #zen-toast-container .zen-toast
     label[data-l10n-id="zen-copy-current-url-confirmation"],
   #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"]
+    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"],
+  /* Zen 1.24.3b renamed them (count arg for copying several tabs). */
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-urls-confirmation"],
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-urls-as-markdown-confirmation"]
 ) #zen-copy-url-button > .urlbar-icon {
   animation: userchrome-copy-link-away 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
@@ -989,7 +994,12 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   #zen-toast-container .zen-toast
     label[data-l10n-id="zen-copy-current-url-confirmation"],
   #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"]
+    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"],
+  /* Zen 1.24.3b renamed them (count arg for copying several tabs). */
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-urls-confirmation"],
+  #zen-toast-container .zen-toast
+    label[data-l10n-id="zen-copy-urls-as-markdown-confirmation"]
 ) #zen-copy-url-button::after {
   animation: userchrome-copy-check-draw 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
