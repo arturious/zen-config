@@ -177,3 +177,6 @@ user_pref("zen.theme.acrylic-sidebar", false);
 /**NAVIGATION**/
 user_pref("browser.backspace_action", 0);
 user_pref("full-screen-api.macos-native-full-screen", true);
+
+// Battery: no blurred favicon backdrop under the selected Essential
+user_pref("zen.theme.essentials-favicon-bg", false);

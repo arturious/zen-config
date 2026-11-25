@@ -1080,3 +1080,6 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
 #zen-site-data-icon-button[boosting] .zen-site-data-boost-animation {
   scale: 1.1 !important;
 }
+
+/* Battery: no page blur behind the floating urlbar, stronger dimming only */
+#browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels { filter: brightness(10%) !important; }
