@@ -65,18 +65,21 @@ tooltip {
   opacity: 1 !important;
 }
 
-/* URL bar zoom animation: the page zooms in, blurs and dims behind the
-   floating search. No pointer-events: none here - Zen closes the floating
-   search when the page is clicked, and blocking clicks on it made closing
-   take two clicks. */
-#browser:not(:has(.zen-glance-background)) #tabbrowser-tabpanels {
+/* URL bar zoom animation: the page zooms in and dims behind the
+   floating search. No blur — it was applied to the whole page (including
+   video) and was expensive; dimming is brightness(10%). No
+   pointer-events: none here - Zen closes the floating search when the
+   page is clicked, and blocking clicks on it made closing take two clicks. */
+/* :has() is on #tabbrowser-tabpanels, not #browser, so it only watches
+   the page area (Glance's .zen-glance-background lives inside it). */
+#tabbrowser-tabpanels:not(:has(.zen-glance-background)) {
   transition:
     scale 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3), filter 0.15s ease-in-out !important;
 }
 
 #browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels {
   scale: 1.1 !important;
-  filter: blur(10px) brightness(70%) !important;
+  filter: brightness(10%) !important;
 }
 
 #urlbar[open][zen-floating-urlbar="true"],
@@ -369,11 +372,18 @@ menupopup:not(#__a)::part(content) {
   border-radius: 10px !important;
 }
 
-/* More room between context menu items. */
+/* Context menu items: more room between them, corners concentric with
+   the menu's 10px (the item sits ~4px in from the edge, so 10 - 4 = 6px),
+   and 1px larger text than panels. */
 menupopup menu,
 menupopup menuitem {
   padding-block: 6px !important;
   min-height: 30px !important;
+  border-radius: 6px !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
 }
 
 .panel-viewstack,
@@ -391,28 +401,13 @@ menuitem[_moz-menuactive="true"] {
   color: #ffffff !important;
 }
 
-/* Highlighted context menu item: concentric with the menu's 10px corners -
-   the item sits ~4px in from the menu edge, so 10 - 4 = 6px. */
-menupopup menu,
-menupopup menuitem {
-  border-radius: 6px !important;
-}
-
 panel toolbarbutton,
 panel label,
-panel description,
-menupopup menu,
-menupopup menuitem {
+panel description {
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
   font-size: 12px !important;
   font-weight: 400 !important;
-}
-
-/* Context menus 1px larger than panels. */
-menupopup menu,
-menupopup menuitem {
-  font-size: 13px !important;
 }
 
 /* Corners of the compact-mode sidebar, for the toasts and the fullscreen
@@ -585,6 +580,15 @@ panel[type="arrow"]:not(#feature-callout):not(#__a):not(#__b)::part(content) {
   --zen-toast-max-height: 36px !important;
   padding: 0 8px !important;
   gap: 6px !important;
+  /* grows and shrinks around its own center, not from its left side */
+  transform-origin: center !important;
+  animation:
+    userchrome-toast-in 0.6s linear,
+    userchrome-toast-out 0.2s ease-out
+      calc(2s - var(--userchrome-toast-hovered) * 1s) forwards;
+  /* Remembers a hover: set to 1 instantly on hover, back to 0 only an hour
+     after the pointer leaves. */
+  transition: --userchrome-toast-hovered 0s linear 3600s;
 }
 /* The toast container lives inside #zen-tabbox-wrapper, which Zen makes a
    stacking context at z-index 0, while the top toolbar
@@ -847,23 +851,12 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
   background-color: #000 !important;
 }
 
-/* Zen's toasts (at Zen's default top-right spot). Showing is the
+/* Toast show/hide (at Zen's default top-right spot). Showing is the
    fullscreen banner's hide in reverse: fades in and grows from 0.5 in place
    in 0.2s. Zen's JS springs an inline transform from scale(0) for 0.5s; an
-   animation outranks inline style, so `transform: none` here masks that
-   spring until it has settled at scale(1). Hiding is userchrome-toast-out
-   below. */
-#zen-toast-container:not(#__a) .zen-toast {
-  /* grows and shrinks around its own center, not from its left side */
-  transform-origin: center !important;
-  animation:
-    userchrome-toast-in 0.6s linear,
-    userchrome-toast-out 0.2s ease-out
-      calc(2s - var(--userchrome-toast-hovered) * 1s) forwards;
-  /* Remembers a hover: set to 1 instantly on hover, back to 0 only an hour
-     after the pointer leaves. */
-  transition: --userchrome-toast-hovered 0s linear 3600s;
-}
+   animation outranks inline style, so `transform: none` in
+   userchrome-toast-in masks that spring until it has settled at scale(1).
+   Hiding is userchrome-toast-out below. */
 /* Hovered: stays (Zen also pauses its own timer). Leaving re-adds the hide
    animation, which restarts it: 1s after a hover, 2s on first show. */
 #zen-toast-container:not(#__a) .zen-toast:hover {
@@ -936,10 +929,6 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
 
 /* Copy-link icon mirrored horizontally in every state, including while
    the page loads (the button is [disabled] until the URL is copyable). */
-#zen-copy-url-button > .urlbar-icon {
-  scale: -1 1 !important;
-}
-
 /* After copy: Zen link styles kept (fill / mirror untouched).
    2.2s timeline matches toast-out. :active resets so each click replays
    checkmark from the start (toast already re-springs on re-copy). */
@@ -955,6 +944,7 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
 }
 
 #zen-copy-url-button > .urlbar-icon {
+  scale: -1 1 !important;
   --uc-link-op: 1;
   transform-origin: center !important;
   transform: scale(1);
@@ -986,22 +976,13 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
     label[data-l10n-id="zen-copy-urls-confirmation"],
   #zen-toast-container .zen-toast
     label[data-l10n-id="zen-copy-urls-as-markdown-confirmation"]
-) #zen-copy-url-button > .urlbar-icon {
-  animation: userchrome-copy-link-away 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
-}
-
-:root:has(
-  #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-current-url-confirmation"],
-  #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-current-url-as-markdown-confirmation"],
-  /* Zen 1.24.3b renamed them (count arg for copying several tabs). */
-  #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-urls-confirmation"],
-  #zen-toast-container .zen-toast
-    label[data-l10n-id="zen-copy-urls-as-markdown-confirmation"]
-) #zen-copy-url-button::after {
-  animation: userchrome-copy-check-draw 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+) {
+  #zen-copy-url-button > .urlbar-icon {
+    animation: userchrome-copy-link-away 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  #zen-copy-url-button::after {
+    animation: userchrome-copy-check-draw 2.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
 }
 
 /* Each press clears the finished animation so mouseup starts it again. */
@@ -1080,6 +1061,3 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
 #zen-site-data-icon-button[boosting] .zen-site-data-boost-animation {
   scale: 1.1 !important;
 }
-
-/* Battery: no page blur behind the floating urlbar, stronger dimming only */
-#browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels { filter: brightness(10%) !important; }
