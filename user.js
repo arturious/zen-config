@@ -147,3 +147,11 @@ user_pref("browser.backspace_action", 0);
 
 // Battery: no blurred favicon backdrop under the selected Essential
 user_pref("zen.theme.essentials-favicon-bg", false);
+
+// Arc-style find highlights (jan-voe/zen-arc-findbar): all matches yellow,
+// the current match orange. Applied on every start; change here or in about:config.
+user_pref("findbar.highlightAll", true);
+user_pref("ui.textHighlightBackground", "#FFFF00");
+user_pref("ui.textHighlightForeground", "#000000");
+user_pref("ui.textSelectAttentionBackground", "#FF9632");
+user_pref("ui.textSelectAttentionForeground", "#000000");

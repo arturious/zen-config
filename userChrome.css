@@ -1061,3 +1061,283 @@ toolbar .webextension-browser-action .toolbarbutton-badge {
 #zen-site-data-icon-button[boosting] .zen-site-data-boost-animation {
   scale: 1.1 !important;
 }
+
+/* Arc-style find-in-page bar (Cmd+F): a compact bar floating in the
+   top-right of the page — search field, match count, arrows, close.
+   Adapted from jan-voe/zen-arc-findbar v1.3.0 (MIT)
+   https://github.com/jan-voe/zen-arc-findbar
+   Colors, type and radius match the zoom pill above (black, 0.5px
+   hairline, SF 13px, --userchrome-sidebar-radius).
+   Position: 12px from the top-right of the tab content
+   (.browserContainer). The zoom pill is position:fixed at viewport
+   top 52px / right 12px; when this bar is open, the pill shifts to
+   the left of it so they don't overlap. Pure CSS — match count uses
+   Firefox's native .found-matches label (the trailing word wraps out
+   of a 13ch box, leaving "1 of 3" / "1 из 3"). */
+:root {
+  --arc-findbar-width: 340px;
+  --arc-findbar-offset-top: 12px;
+  --arc-findbar-offset-right: 12px;
+  --arc-findbar-radius: var(--userchrome-sidebar-radius);
+  --arc-findbar-bg: #000;
+  --arc-findbar-fg: #f1f1f1;
+  --arc-findbar-muted: rgba(255, 255, 255, 0.5);
+  --arc-findbar-border: rgba(255, 255, 255, 0.18);
+  --arc-findbar-hover: rgba(255, 255, 255, 0.1);
+  --arc-findbar-focus-border: rgba(255, 255, 255, 0.28);
+  --arc-findbar-focus-ring: 0 0 0 0 transparent;
+  --arc-findbar-shadow: none;
+  --arc-findbar-shadow-focus: none;
+  --arc-findbar-notfound: #e5484d;
+  --arc-findbar-blur: 0px;
+}
+
+/* Positioning context: the tab's content area (also works in split view) */
+.browserContainer {
+  position: relative;
+}
+
+/* ---------- The box ---------- */
+.browserContainer > findbar {
+  grid-area: auto !important; /* leave the bottom grid row so it is positioned against the whole container */
+  position: absolute !important;
+  top: var(--arc-findbar-offset-top) !important;
+  right: var(--arc-findbar-offset-right) !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 10 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  width: var(--arc-findbar-width) !important;
+  max-width: calc(100% - 2 * var(--arc-findbar-offset-right)) !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 4px 4px 4px 0 !important;
+  box-sizing: border-box !important;
+
+  background: var(--arc-findbar-bg) !important;
+  background-image: none !important;
+  backdrop-filter: blur(var(--arc-findbar-blur)) !important;
+  color: var(--arc-findbar-fg) !important;
+  border: none !important;
+  border-radius: var(--arc-findbar-radius) !important;
+  outline: 0.5px solid var(--arc-findbar-border) !important;
+  outline-offset: -0.5px !important;
+  box-shadow: var(--arc-findbar-shadow) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transform-origin: top right;
+  transition:
+    opacity 120ms ease,
+    transform 160ms cubic-bezier(0.2, 0.9, 0.3, 1.2),
+    outline-color 140ms ease,
+    visibility 0s !important;
+}
+
+/* Focus: a slightly brighter hairline; the ring stays optional */
+.browserContainer > findbar:focus-within {
+  outline-color: var(--arc-findbar-focus-border) !important;
+  box-shadow: var(--arc-findbar-shadow-focus), var(--arc-findbar-focus-ring) !important;
+}
+
+/* Hidden: Firefox sets [hidden] but keeps display:flex so it can animate */
+.browserContainer > findbar[hidden] {
+  margin: 0 !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transform: translateY(-6px) scale(0.98) !important;
+  pointer-events: none !important;
+  transition:
+    opacity 100ms ease,
+    transform 100ms ease,
+    outline-color 100ms ease,
+    visibility 0s 100ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .browserContainer > findbar,
+  .browserContainer > findbar[hidden] {
+    transition: none !important;
+  }
+}
+
+/* When the find bar is open, slide the zoom pill to its left
+   (12px gutter + bar width + 12px gap) so they don't stack. */
+#browser:has(.browserContainer > findbar:not([hidden])) #urlbar-zoom-button[animate] {
+  right: calc(var(--arc-findbar-offset-right) + var(--arc-findbar-width) + 12px) !important;
+}
+
+/* ---------- Everything in one row ---------- */
+findbar .findbar-container {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 1 !important;
+  order: 1 !important; /* before the close button */
+}
+
+/* Flatten the wrapper so field, match count and arrows become siblings */
+findbar .findbar-container > hbox[anonid="findbar-textbox-wrapper"] {
+  display: contents !important;
+}
+
+/* Order: field → match count → up → down (close button follows outside) */
+findbar .findbar-textbox { order: 1 !important; }
+findbar .found-matches { order: 2 !important; }
+findbar .findbar-find-previous { order: 3 !important; }
+findbar .findbar-find-next { order: 4 !important; }
+
+/* Hide everything Arc doesn't have */
+findbar .findbar-container > checkbox,
+findbar .findbar-container > .findbar-label:not(.found-matches),
+findbar .find-status-icon {
+  display: none !important;
+}
+
+/* ---------- Search field (borderless, the box itself is the "field") ---------- */
+findbar .findbar-textbox {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 60px !important;
+  min-height: 26px !important;
+  margin: 0 !important;
+  padding: 0 4px 0 12px !important;
+  background: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+findbar .findbar-textbox[status="notfound"] {
+  background: transparent !important;
+  color: var(--arc-findbar-notfound) !important;
+}
+
+findbar .findbar-textbox[flash="true"] {
+  background: transparent !important;
+}
+
+/* ---------- Match count inside the field ---------- */
+/* The label reads "1 of 3 matches" / "1 из 3 совпадений" and CSS can't
+ * change the text. Trick: the label is so narrow that the trailing word
+ * wraps to a second line, and only the first line ("1 of 3" / "1 из 3")
+ * stays visible, right-aligned next to the arrows.
+ * 13ch fits "1000 of 1000" / "1000 из 1000". */
+findbar .found-matches {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: 13ch !important;
+  height: 16px !important;
+  line-height: 16px !important;
+  margin: 0 6px 0 0 !important;
+  overflow: hidden !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  text-align: end !important;
+  color: var(--arc-findbar-muted) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Locales that put the word before the numbers (fr, it, pt, ca) or split
+ * the numbers around it (zh, ja, tr, sv) need the full label; the 13ch trick
+ * would cut off the count. The field gives up the space instead. */
+:root:is(
+  :lang(fr), :lang(it), :lang(pt), :lang(ca),
+  :lang(zh), :lang(ja), :lang(tr), :lang(sv)
+) findbar .found-matches {
+  width: auto !important;
+  max-width: 60% !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+:root:is(
+  :lang(fr), :lang(it), :lang(pt), :lang(ca),
+  :lang(zh), :lang(ja), :lang(tr), :lang(sv)
+) findbar .findbar-textbox {
+  flex: 1 1 0 !important;
+}
+
+findbar .found-matches[hidden] {
+  display: none !important;
+}
+
+/* ---------- Arrows and close: equal-sized icon buttons ---------- */
+findbar .findbar-find-previous,
+findbar .findbar-find-next,
+findbar .close-icon.findbar-closebutton {
+  appearance: none !important;
+  flex: 0 0 auto !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 5px !important;
+  border: none !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  fill: var(--arc-findbar-fg) !important;
+  color: var(--arc-findbar-fg) !important;
+  -moz-context-properties: fill !important;
+  opacity: 1 !important;
+  box-sizing: border-box !important;
+}
+
+findbar .findbar-find-previous:not([disabled]):hover,
+findbar .findbar-find-next:not([disabled]):hover,
+findbar .close-icon.findbar-closebutton:hover {
+  background: var(--arc-findbar-hover) !important;
+}
+
+findbar .findbar-find-previous:focus-visible,
+findbar .findbar-find-next:focus-visible,
+findbar .close-icon.findbar-closebutton:focus-visible {
+  outline: none !important;
+  background: var(--arc-findbar-hover) !important;
+}
+
+findbar .findbar-find-previous[disabled] > .toolbarbutton-icon,
+findbar .findbar-find-next[disabled] > .toolbarbutton-icon {
+  opacity: 0.35 !important;
+}
+
+/* Firefox keeps the arrows enabled when the current term has no matches; grey them out anyway */
+findbar .findbar-textbox[status="notfound"] ~ .findbar-find-previous > .toolbarbutton-icon,
+findbar .findbar-textbox[status="notfound"] ~ .findbar-find-next > .toolbarbutton-icon {
+  opacity: 0.35 !important;
+}
+
+findbar .findbar-find-previous > .toolbarbutton-icon,
+findbar .findbar-find-next > .toolbarbutton-icon,
+findbar .findbar-closebutton > .toolbarbutton-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Close button always far right */
+findbar .findbar-closebutton {
+  order: 99 !important;
+  margin-inline-start: 2px !important;
+}
