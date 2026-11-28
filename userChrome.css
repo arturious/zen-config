@@ -60,8 +60,11 @@ tooltip {
   scale: 0.9 !important;
   opacity: 0;
 }
+/* scale: none (not 1) at rest: any non-none transform on the page's
+   ancestor keeps it in its own transformed stacking context / reference
+   frame, which Firefox doesn't have. none still animates from 0.9. */
 #tabbrowser-tabpanels > hbox.deck-selected:not([zen-split="true"]) {
-  scale: 1 !important;
+  scale: none !important;
   opacity: 1 !important;
 }
 
@@ -1340,4 +1343,71 @@ findbar .findbar-closebutton > .toolbarbutton-icon {
 findbar .findbar-closebutton {
   order: 99 !important;
   margin-inline-start: 2px !important;
+}
+
+
+/* Disable Rounded Corners (gunir, v3.0.0)
+   https://zen-browser.app/mods/c6813222-6571-4ba6-8faf-58f3343324f6/
+   https://github.com/zen-browser/theme-store/tree/main/themes/c6813222-6571-4ba6-8faf-58f3343324f6
+   Author homepage (themes branch is gone): https://github.com/gunir/desktop/tree/themes/themes
+   No preferences.json — CSS applied unconditionally. */
+:root {
+  --zen-webview-border-radius: 0;
+  #tabbrowser-tabpanels:not([zen-split-view="true"]) {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+}
+
+/* No frame around web content: overflow:clip + border-radius breaks WebRender picture caching
+   https://github.com/zen-browser/desktop/issues/6302 */
+:root { --zen-element-separation: 0px !important; }
+#tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+  overflow: visible !important; /* picture-caching */
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ===== SHELL vs PAGE: nothing from Zen's UI on or around the page =====
+   Research 2026-11-28 on Zen 1.24.3b (shipped omni.ja CSS + source):
+   https://github.com/zen-browser/desktop/issues/6302
+   https://github.com/zen-browser/desktop/blob/dev/src/zen/common/styles/zen-theme.css
+   https://searchfox.org/mozilla-central/search?q=GetFrameTransparency */
+
+/* Opaque window like Firefox. On macOS Zen makes the whole window
+   transparent (#main-window background: transparent in zen-theme.css),
+   even with vibrancy off. Gecko then creates a non-opaque NSWindow, so
+   macOS has to blend the window with the desktop on every frame the page
+   draws. Everything here is painted black already, so nothing changes
+   visually. */
+#main-window[windowtype="navigator:browser"]:not([popup-window]) {
+  background-color: #000 !important;
+}
+
+/* Grain texture uses blending that knocks WebRender off its cached
+   layers (issue #6302); hide it everywhere, not only in the sidebar. */
+.zen-browser-grain {
+  display: none !important;
+}
+
+/* Loading pill inside the page container (also off via
+   zen.view.enable-loading-indicator in user.js). */
+#zen-loading-progress-bar {
+  display: none !important;
+}
+
+/* Page container and its wrappers: no rounded clip, mask or shadow at
+   rest. Zen's own rules (overflow: clip + corner-shape radius on
+   .browserSidebarContainer, clip-path on older builds) are what broke
+   picture caching. A plain rectangular clip stays: Firefox itself clips
+   .browserContainer (content-area.css). Split view and Glance keep their
+   own styling. */
+#tabbrowser-tabpanels:not([zen-split-view="true"]) > .browserSidebarContainer:not(.zen-glance-background, .zen-glance-overlay),
+#tabbrowser-tabpanels:not([zen-split-view="true"]) > .browserSidebarContainer:not(.zen-glance-background, .zen-glance-overlay) > .browserContainer,
+#tabbrowser-tabpanels:not([zen-split-view="true"]) > .browserSidebarContainer:not(.zen-glance-background, .zen-glance-overlay) .browserStack {
+  border-radius: 0 !important;
+  clip-path: none !important;
+  mask: none !important;
+  box-shadow: none !important;
+  will-change: auto !important;
 }

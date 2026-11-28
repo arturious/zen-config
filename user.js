@@ -102,8 +102,8 @@ user_pref("gfx.core-animation.specialize-video", true);
 user_pref("browser.sessionhistory.max_total_viewers", 4);
 // No per-site process isolation (Fission): the biggest RAM saving, but weaker
 // protection against Spectre-type attacks between sites. Delete to restore.
-user_pref("fission.webContentIsolationStrategy", 0);
-user_pref("dom.ipc.processCount", 4);
+// user_pref("fission.webContentIsolationStrategy", 0);
+// user_pref("dom.ipc.processCount", 4);
 
 /** NETWORK & CACHE (Betterfox "Fastfox") ***/
 user_pref("browser.cache.memory.capacity", 131072); // memory cache 128 MB
@@ -111,9 +111,9 @@ user_pref("network.http.max-persistent-connections-per-server", 10);
 user_pref("network.http.pacing.requests.enabled", false); // don't hold back requests
 user_pref("network.dnsCacheExpiration", 3600); // keep DNS answers 1 hour
 user_pref("network.ssl_tokens_cache_capacity", 10240); // faster repeat TLS handshakes
-user_pref("gfx.canvas.accelerated.cache-items", 32768);
-user_pref("gfx.canvas.accelerated.cache-size", 4096);
-user_pref("gfx.content.skia-font-cache-size", 32);
+// user_pref("gfx.canvas.accelerated.cache-items", 32768);
+// user_pref("gfx.canvas.accelerated.cache-size", 4096);
+// user_pref("gfx.content.skia-font-cache-size", 32);
 
 /** GPU ***/
 // Everything on the GPU, even where Firefox would fall back to the CPU
@@ -157,4 +157,49 @@ user_pref("ui.textSelectAttentionBackground", "#FF9632");
 user_pref("ui.textSelectAttentionForeground", "#000000");
 
 user_pref("full-screen-api.macos-native-full-screen", false);
-user_pref("gfx.webrender.compositor", false);
+/** SCROLL SMOOTHNESS: same compositing path as Firefox on macOS **/
+// Native compositor = Core Animation layers (Firefox and Zen default on macOS).
+// false made WebRender redraw and present the WHOLE window every frame
+// (no partial updates) - the main reason scrolling was choppier than in
+// Firefox and drew more power. The "false" tip from Zen issue #9290 comes
+// from a Windows/NVIDIA bug (bugzilla 1642269), not macOS.
+//   https://mozillagfx.wordpress.com/2019/10/22/dramatically-reduced-power-usage-in-firefox-70-on-macos-with-core-animation/
+user_pref("gfx.webrender.compositor", true);
+user_pref("gfx.webrender.compositor.force-enabled", false); // Firefox default
+// ProMotion back to 120 Hz like Firefox (0 = display rate; overrides the 60
+// left in prefs.js from about:config). Idle pages draw no frames, so 120 Hz
+// costs extra only while scrolling/animating. Set 60 to save battery.
+user_pref("gfx.display.max-frame-rate", 0);
+
+/** SMOOTH SCROLL **/
+// Betterfox Instant Scrolling is the option recommended for 60 Hz:
+//   https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+// Zen skips Smoothfox wheel/MSD prefs on macOS (native APZ trackpad):
+//   https://github.com/yokoffing/Betterfox/blob/main/zen/user.js
+//   https://github.com/zen-browser/desktop (prefs/smoothscroll.yaml, !XP_MACOSX)
+// Instant's mousewheel.default.delta_multiplier_y=275 is for Windows/Linux
+// mice and would make the Mac trackpad too fast, so the default 100 is kept.
+user_pref("apz.overscroll.enabled", true);
+user_pref("general.smoothScroll", true);
+// user_pref("general.smoothScroll.msdPhysics.enabled", true);
+user_pref("zen.view.experimental-rounded-view", false);
+
+// Remove the frame around web content (rounded clip breaks WebRender picture caching -> laggy scroll, extra power)
+user_pref("zen.theme.border-radius", 0);
+
+/** SHELL vs PAGE: keep Zen's UI from touching the web content area **/
+// Research 2026-11-28 (Zen 1.24.3b omni.ja + zen-browser/desktop source):
+//   https://github.com/zen-browser/desktop/issues/6302  (picture caching)
+//   https://github.com/zen-browser/desktop/blob/dev/src/zen/common/sys/ui/ZenProgressBar.sys.mjs
+//   https://github.com/zen-browser/desktop/blob/dev/src/widget/cocoa/nsCocoaWindow-mm.patch
+// Loading pill: Zen inserts an animated element INSIDE the page's container
+// (.browserSidebarContainer) while a tab loads, with an infinite pulse
+// animation on top of the page. Firefox has nothing there. The reload/stop
+// button still shows loading. true to bring it back.
+user_pref("zen.view.enable-loading-indicator", true);
+// Only switches the native vibrancy material (already off) to follow window
+// focus and repaints the app background on every focus change. Firefox parity.
+user_pref("zen.view.grey-out-inactive-windows", false);
+// Startup fade-in: Zen sets opacity:0 on #browser children (the page area
+// included) and animates it back at launch. Startup only; no fade at launch now.
+user_pref("zen.watermark.enabled", false);
